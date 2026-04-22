@@ -151,21 +151,9 @@ class AdminHandlers:
             await self.handle_set_warn_limit(client, message)
     
     def _register_callbacks(self):
-        """Register callback handlers"""
-        
-        @self.app.on_callback_query(filters.regex(r"^(resetwarns|unban)_"))
-        @handle_errors
-        async def admin_callback_handler(client, callback: CallbackQuery):
-            await self.handle_admin_callback(client, callback)
-        
-        @self.app.on_callback_query(filters.regex(r"^close_message$"))
-        @handle_errors
-        async def close_callback_handler(client, callback: CallbackQuery):
-            try:
-                await callback.message.delete()
-            except:
-                await callback.message.edit_text("Message closed.")
-            await callback.answer()
+        """Register callback handlers - delegated to central CallbackHandlers"""
+        # All callbacks are handled by handlers/callbacks.py
+        pass
     
     async def handle_admin_callback(self, client: Client, callback: CallbackQuery):
         """Handle admin-related callbacks"""

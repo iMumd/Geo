@@ -162,22 +162,9 @@ class ModerationHandlers:
             await self.handle_settings(client, message)
     
     def _register_callbacks(self):
-        """Register callback handlers"""
-        
-        @self.app.on_callback_query(filters.regex(r"^(lock|unlock|locktoggle)_"))
-        @handle_errors
-        async def lock_callback_handler(client, callback: CallbackQuery):
-            await self.handle_lock_callback(client, callback)
-        
-        @self.app.on_callback_query(filters.regex(r"^settings_"))
-        @handle_errors
-        async def settings_callback_handler(client, callback: CallbackQuery):
-            await self.handle_settings_callback(client, callback)
-        
-        @self.app.on_callback_query(filters.regex(r"^(staff|gban|approved|reports)_"))
-        @handle_errors
-        async def list_callback_handler(client, callback: CallbackQuery):
-            await self.handle_list_callback(client, callback)
+        """Register callback handlers - delegated to central CallbackHandlers"""
+        # All callbacks are handled by handlers/callbacks.py
+        pass
     
     # Lock/Unlock handlers
     async def handle_lock(self, client: Client, message: Message):
