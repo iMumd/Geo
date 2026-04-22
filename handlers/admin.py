@@ -734,28 +734,67 @@ class AdminHandlers:
         if not args:
             if message.reply_to_message:
                 user = message.reply_to_message.from_user
-                reason = None
+                reason = self._extract_reason(message.text)
             else:
                 return None, None
         else:
-            # Check if last arg looks like a reason (not @user or number)
-            if len(args) > 1 and not args[-1].startswith(('@', 'id')):
-                reason = ' '.join(args[1:])
-            else:
-                reason = None
+            # Check if last arg looks like a reason (not @user or number or id format)
+            user_args = args.copy()
+            reason = None
             
-            user_text = args[0]
-            user_id = parse_user_id(user_text)
+            # Look for reason after user mention/ID
+            for i, arg in enumerate(args):
+                if i == 0:
+                    continue
+                # If arg doesn't start with @ or id, it's likely part of reason
+                if not arg.startswith(('@', 'id')) and not arg.lstrip('-').isdigit():
+                    reason = ' '.join(args[i:])
+                    user_args = args[:i]
+                    break
             
-            if not user_id:
+            user_text = user_args[0] if user_args else None
+            if not user_text:
                 return None, None
             
-            try:
-                if isinstance(user_id, str):
-                    user = await self.app.get_users(user_id)
-                else:
-                    user = await self.app.get_users(user_id)
-            except:
+            # Try to parse user from mention, username, or ID
+            user = await self._resolve_user(user_text)
+            if not user:
                 return None, None
         
         return user, reason
+    
+    async def _resolve_user(self, user_text: str):
+        """Resolve user from various formats: @username, user ID, or id123"""
+        try:
+            # Direct numeric ID
+            if user_text.lstrip('-').isdigit():
+                users = await self.app.get_users(int(user_text))
+                return users[0] if isinstance(users, list) else users
+            
+            # Username or mention (starts with @)
+            if user_text.startswith('@'):
+                users = await self.app.get_users(user_text)
+                return users[0] if isinstance(users, list) else users
+            
+            # ID mention format (id123456)
+            id_match = re.match(r'id(\d+)', user_text, re.IGNORECASE)
+            if id_match:
+                user_id = int(id_match.group(1))
+                users = await self.app.get_users(user_id)
+                return users[0] if isinstance(users, list) else users
+            
+            # Try as username directly
+            users = await self.app.get_users(user_text)
+            return users[0] if isinstance(users, list) else users
+            
+        except Exception as e:
+            logger.debug(f"Could not resolve user '{user_text}': {e}")
+            return None
+    
+    def _extract_reason(self, text: str) -> Optional[str]:
+        """Extract reason from command text (after the command)"""
+        # Split by space and get everything after the command
+        parts = text.split(maxsplit=1)
+        if len(parts) > 1:
+            return parts[1] if parts[1].strip() else None
+        return None

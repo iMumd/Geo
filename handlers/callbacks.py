@@ -115,8 +115,8 @@ class CallbackHandlers:
         @self.app.on_callback_query(filters.regex(r"^stats_refresh$"))
         @handle_errors
         async def cb_stats_refresh(client, callback: CallbackQuery):
-            """Refresh stats"""
-            await self.show_stats(callback)
+            """Refresh stats - update same message"""
+            await self.show_stats(callback, is_refresh=True)
         
         # ==================== SETTINGS ====================
         
@@ -578,31 +578,65 @@ Click on a language button to change the language! 👆"""
     
     # ==================== STATS ====================
     
-    async def show_stats(self, callback: CallbackQuery):
-        """Show bot stats"""
+    async def show_stats(self, callback: CallbackQuery, is_refresh: bool = False):
+        """Show bot stats with dynamic timing"""
+        import time
+        from datetime import datetime
+        
+        start_time = time.time()
+        
+        # Fetch stats from database
         stats = await db.get_all_stats()
         
+        # Get current timestamp
+        current_timestamp = int(time.time())
+        
+        # Calculate load time
+        load_time = round((time.time() - start_time) * 1000, 1)
+        
+        # Format stats
+        total_users = stats.get('total_users', 'N/A')
+        total_chats = stats.get('total_chats', 'N/A')
+        total_warnings = stats.get('total_warnings', 'N/A')
+        global_bans = stats.get('global_bans', 'N/A')
+        protected_groups = stats.get('protected_groups', 'N/A')
+        
         keyboard = InlineKeyboardMarkup([
-            [InlineKeyboardButton("🔄 Refresh", callback_data="stats_refresh")],
-            [InlineKeyboardButton("🔙 Back", callback_data="back_main")]
+            [
+                InlineKeyboardButton("🔄 Refresh", callback_data="stats_refresh")
+            ],
+            [
+                InlineKeyboardButton("🔙 Back", callback_data="back_main")
+            ]
         ])
         
-        text = f"""**📊 Bot Statistics**
+        text = f"""📊 **Bot Statistics**
 
-Here's some info about **{config.bot.name}**:
+━━━━━━━━━━━━━━━━━━━━━━
+👥 **Total Users:** `{total_users}`
+💬 **Total Chats:** `{total_chats}`
+⚠️ **Total Warnings:** `{total_warnings}`
+🚫 **Global Bans:** `{global_bans}`
+🛡️ **Protected Groups:** `{protected_groups}`
+━━━━━━━━━━━━━━━━━━━━━━
 
-👥 **Total Users:** {stats.get('total_users', 'N/A')}
-💬 **Total Chats:** {stats.get('total_chats', 'N/A')}
-⚠️ **Total Warnings:** {stats.get('total_warnings', 'N/A')}
-🚫 **Global Bans:** {stats.get('global_bans', 'N/A')}
-🛡️ **Protected Groups:** {stats.get('protected_groups', 'N/A')}
-
-Use the refresh button to update the stats! 🔄"""
+⚡ **Load Time:** `{load_time}ms`
+🕐 **Updated:** `{datetime.now().strftime('%H:%M:%S')}`"""
         
-        try:
-            await callback.message.edit_text(text, reply_markup=keyboard)
-        except:
-            await callback.message.reply_text(text, reply_markup=keyboard)
+        if is_refresh:
+            # Edit the same message on refresh
+            try:
+                await callback.message.edit_text(text, reply_markup=keyboard)
+                await callback.answer("✅ Stats updated!")
+            except Exception as e:
+                logger.warning(f"Could not edit message: {e}")
+                await callback.message.reply_text(text, reply_markup=keyboard)
+        else:
+            try:
+                await callback.message.edit_text(text, reply_markup=keyboard)
+            except:
+                await callback.message.reply_text(text, reply_markup=keyboard)
+        
         await callback.answer()
     
     # ==================== SETTINGS ====================
