@@ -126,8 +126,7 @@ class UserHandlers:
             ]
         ])
         
-        welcome_text = f"""Hi, I'm **{config.bot.name}**!
-
+        welcome_text = """Hi, I'm Geo!
 I can help protect your groups
 
 Use /help to see commands"""
@@ -290,8 +289,7 @@ Click a command to get info:"""
                 ]
             ])
             
-            welcome_text = f"""Hi, I'm **{config.bot.name}**!
-
+            welcome_text = """Hi, I'm Geo!
 I can help protect your groups
 
 Use /help to see commands"""
