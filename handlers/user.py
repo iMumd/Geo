@@ -329,7 +329,7 @@ Use the buttons below to explore:"""
             # Send with GIF if available
             if has_gif:
                 await message.reply_animation(
-                    gif=gif_path,
+                    animation=gif_path,
                     caption=welcome_text,
                     reply_markup=keyboard
                 )

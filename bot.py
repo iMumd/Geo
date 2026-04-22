@@ -73,9 +73,6 @@ class GeoBot:
             api_id=config.telegram.api_id,
             api_hash=config.telegram.api_hash,
             bot_token=config.bot.token,
-            plugins=dict(
-                root="plugins"
-            ),
             workdir=".",
             app_version=config.telegram.app_version,
             device_model=config.telegram.device_model,
