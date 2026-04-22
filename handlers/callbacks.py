@@ -265,29 +265,23 @@ class CallbackHandlers:
                 InlineKeyboardButton("📊 Stats", callback_data="stats_main")
             ],
             [
-                InlineKeyboardButton("📢 Channel", url="https://t.me/iMumd"),
-                InlineKeyboardButton("💬 Support", url="https://t.me/iMumd")
+                InlineKeyboardButton("📢 Channel", url=config.bot.channel_link),
+                InlineKeyboardButton("💬 Support", url=config.bot.support_link)
             ]
         ])
         
-        text = f"""
-╔═══════════════════════════════════════════╗
-║                                           ║
-║   Welcome to **{config.bot.name}** {config.bot.god_status} Edition!    ║
-║                                           ║
-║   Your powerful Telegram protection bot   ║
-║                                           ║
-╚═══════════════════════════════════════════╝
+        text = f"""Hi, I'm **{config.bot.name}** {config.bot.god_status} Edition 👋
 
-🛡️ **I can help protect your groups from:**
+I'm your powerful Telegram protection bot 🛡️
+
+I can help protect your groups from:
 • Spam and malicious content
 • Unwanted users
 • Warning system
 • Content locks
 • And much more!
 
-👇 **Select an option below:**
-"""
+Use the buttons below to explore:"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -312,21 +306,15 @@ class CallbackHandlers:
             ]
         ])
         
-        text = """
-╔═══════════════════════════════════════════╗
-║                                           ║
-║          📖 Available Commands 📖         ║
-║                                           ║
-╚═══════════════════════════════════════════╝
-
-**Select a category to view commands:**
+        text = """Here are all my available commands, organized by category:
 
 🛡️ **Protection** - Anti-spam, anti-flood, anti-bot
 👑 **Admin** - Ban, mute, warn, kick, etc.
 🔒 **Locks** - Lock chat features
 👥 **Staff** - Manage staff members
 🌐 **General** - Info, stats, language
-"""
+
+Click on a category above to see the commands! 👆"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -354,13 +342,18 @@ class CallbackHandlers:
             ]
         ])
         
-        text = """
-╔═══════════════════════════════════════════╗
-║          🛡️ Protection Commands 🛡️        ║
-╚═══════════════════════════════════════════╝
+        text = """**🛡️ Protection Commands**
 
-**Click a command to get info:**
-"""
+Here are the protection features available:
+
+• **Anti-Spam** - Automatically block spam messages
+• **Anti-Flood** - Prevent message flooding
+• **Anti-Bot** - Block users with suspicious usernames
+• **Anti-Raid** - Protect against raid attacks
+• **Anti-Scam** - Detect and remove scam messages
+• **Anti-Porn** - Filter NSFW content
+
+Click a button above to learn more! 👆"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -388,13 +381,18 @@ class CallbackHandlers:
             ]
         ])
         
-        text = """
-╔═══════════════════════════════════════════╗
-║            👑 Admin Commands 👑           ║
-╚═══════════════════════════════════════════╝
+        text = """**👑 Admin Commands**
 
-**Click a command to get info:**
-"""
+Here are the admin tools available:
+
+• **Ban/Unban** - Permanently ban or unban users
+• **Kick** - Remove a user from the group
+• **Mute/Unmute** - Temporarily mute a user
+• **Warn** - Issue warnings to users
+• **Pin/Unpin** - Pin messages in chat
+• **Purge** - Delete multiple messages
+
+Click a button above to learn more! 👆"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -427,13 +425,20 @@ class CallbackHandlers:
             ]
         ])
         
-        text = """
-╔═══════════════════════════════════════════╗
-║              🔒 Lock Commands 🔒          ║
-╚═══════════════════════════════════════════╝
+        text = """**🔒 Lock Commands**
 
-**Click to toggle lock:**
-"""
+Use the buttons below to lock/unlock content types in your group:
+
+• **Links** - Lock/Unlock sending links
+• **Forwards** - Lock/Unlock forwarded messages
+• **Audio** - Lock/Unlock audio files
+• **Video** - Lock/Unlock video files
+• **Photos** - Lock/Unlock photos
+• **Documents** - Lock/Unlock documents
+• **Stickers** - Lock/Unlock stickers
+• **Locations** - Lock/Unlock location sharing
+
+Click any button to toggle! 🔄"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -458,11 +463,16 @@ class CallbackHandlers:
         ])
         
         text = """
-╔═══════════════════════════════════════════╗
-║           🌐 General Commands 🌐           ║
-╚═══════════════════════════════════════════╝
+🌐 **General Commands**
 
-**Click to view:**
+These are general commands available to all users:
+
+📊 **Stats** - View bot statistics and info
+🌐 **Language** - Change the bot language
+📋 **Staff** - View group staff members
+📜 **Rules** - View group rules
+
+Use the buttons above to explore! 👆
 """
         
         try:
@@ -486,13 +496,15 @@ class CallbackHandlers:
             ]
         ])
         
-        text = """
-╔═══════════════════════════════════════════╗
-║              👥 Staff Menu 👥             ║
-╚═══════════════════════════════════════════╝
+        text = """**👥 Staff Menu**
 
-**Select an option:**
-"""
+View and manage staff-related lists:
+
+• **Staff List** - View all group admins
+• **GBan List** - View globally banned users
+• **Approved List** - View approved users
+
+Use the buttons above to explore! 👆"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -529,11 +541,11 @@ class CallbackHandlers:
         
         keyboard = InlineKeyboardMarkup(buttons)
         
-        text = """
-╔═══════════════════════════════════════════╗
-║          🌐 Select Your Language 🌐       ║
-╚═══════════════════════════════════════════╝
-"""
+        text = """**🌐 Select Your Language**
+
+Choose your preferred language for the bot interface.
+
+Click on a language button to change the language! 👆"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -575,17 +587,17 @@ class CallbackHandlers:
             [InlineKeyboardButton("🔙 Back", callback_data="back_main")]
         ])
         
-        text = f"""
-╔═══════════════════════════════════════════╗
-║            📊 Bot Statistics 📊            ║
-╚═══════════════════════════════════════════╝
+        text = f"""**📊 Bot Statistics**
+
+Here's some info about **{config.bot.name}**:
 
 👥 **Total Users:** {stats.get('total_users', 'N/A')}
 💬 **Total Chats:** {stats.get('total_chats', 'N/A')}
 ⚠️ **Total Warnings:** {stats.get('total_warnings', 'N/A')}
 🚫 **Global Bans:** {stats.get('global_bans', 'N/A')}
 🛡️ **Protected Groups:** {stats.get('protected_groups', 'N/A')}
-"""
+
+Use the refresh button to update the stats! 🔄"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -632,23 +644,19 @@ class CallbackHandlers:
             ]
         ])
         
-        text = f"""
-╔═══════════════════════════════════════════╗
-║            ⚙️ Chat Settings ⚙️            ║
-╚═══════════════════════════════════════════╝
+        text = f"""**⚙️ Chat Settings**
 
-**Group:** {callback.message.chat.title}
+📢 **Group:** {callback.message.chat.title}
 
-**Protection:**
-🛡️ Anti-Spam: {antispam}
-🌊 Anti-Flood: {antiflood}
+🛡️ **Protection:**
+• Anti-Spam: {antispam}
+• Anti-Flood: {antiflood}
 
-**Features:**
-👋 Welcome: {welcome}
-👋 Goodbye: {goodbye}
-🔒 Locks: {locks}
-📝 Reports: {reports}
-"""
+✨ **Features:**
+• Welcome: {welcome}
+• Goodbye: {goodbye}
+• Locks: {locks}
+• Reports: {reports}"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -750,15 +758,11 @@ class CallbackHandlers:
         
         keyboard = InlineKeyboardMarkup(buttons)
         
-        text = """
-╔═══════════════════════════════════════════╗
-║            🔐 Lock Types 🔐              ║
-╚═══════════════════════════════════════════╝
+        text = """**🔐 Lock Types**
 
-**Click to Lock/Unlock:**
+Click to Lock/Unlock:
 🔒 = Locked
-🔓 = Unlocked
-"""
+🔓 = Unlocked"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -836,23 +840,16 @@ class CallbackHandlers:
         if command in commands_info:
             title, description = commands_info[command]
             
-            text = f"""
-╔═══════════════════════════════════════════╗
-║              {title}              ║
-╚═══════════════════════════════════════════╝
+            text = f"""**{title}**
 
 {description}
 
 **Note:** Most commands require admin privileges.
 """
         else:
-            text = """
-╔═══════════════════════════════════════════╗
-║            ⚠️ Coming Soon!               ║
-╚═══════════════════════════════════════════╝
+            text = """**⚠️ Coming Soon!**
 
-Command info is being prepared.
-"""
+Command info is being prepared."""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -870,18 +867,14 @@ Command info is being prepared.
         
         staff = await db.get_staff(callback.message.chat.id)
         
-        text = f"""
-╔═══════════════════════════════════════════╗
-║             👥 Staff List 👥               ║
-╚═══════════════════════════════════════════╝
+        text = f"""**👥 Staff List**
 
-**Chat:** {callback.message.chat.title}
-"""
+📢 **Chat:** {callback.message.chat.title}"""
         
         if not staff:
-            text += "\n❌ No staff members!\n"
+            text += "\n\n❌ No staff members!"
         else:
-            text += f"\n**Total:** {len(staff)} staff members\n\n"
+            text += f"\n\n**Total:** {len(staff)} staff members\n\n"
             for i, member in enumerate(staff, 1):
                 try:
                     user = await callback.client.get_users(member['user_id'])
@@ -904,16 +897,12 @@ Command info is being prepared.
         """Show global ban list"""
         gbans = await db.get_global_bans()
         
-        text = """
-╔═══════════════════════════════════════════╗
-║           🚫 Global Ban List 🚫           ║
-╚═══════════════════════════════════════════╝
-"""
+        text = """**🚫 Global Ban List**"""
         
         if not gbans:
-            text += "\n✅ No global bans!\n"
+            text += "\n\n✅ No global bans!"
         else:
-            text += f"\n**Total:** {len(gbans)} banned users\n\n"
+            text += f"\n\n**Total:** {len(gbans)} banned users\n\n"
             for i, gban in enumerate(gbans[:20], 1):
                 try:
                     user = await callback.client.get_users(gban['user_id'])
@@ -942,18 +931,14 @@ Command info is being prepared.
         
         approved = await db.get_approved_users(callback.message.chat.id)
         
-        text = f"""
-╔═══════════════════════════════════════════╗
-║          ✅ Approved Users ✅              ║
-╚═══════════════════════════════════════════╝
+        text = f"""**✅ Approved Users**
 
-**Chat:** {callback.message.chat.title}
-"""
+📢 **Chat:** {callback.message.chat.title}"""
         
         if not approved:
-            text += "\n❌ No approved users!\n"
+            text += "\n\n❌ No approved users!"
         else:
-            text += f"\n**Total:** {len(approved)} approved users\n\n"
+            text += f"\n\n**Total:** {len(approved)} approved users\n\n"
             for i, user_data in enumerate(approved[:20], 1):
                 try:
                     user = await callback.client.get_users(user_data['user_id'])

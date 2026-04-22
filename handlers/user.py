@@ -173,21 +173,15 @@ class UserHandlers:
             ]
         ])
         
-        help_text = """
-╔═══════════════════════════════════════════╗
-║                                           ║
-║          📖 Available Commands 📖         ║
-║                                           ║
-╚═══════════════════════════════════════════╝
+        help_text = """**📖 Available Commands**
 
-**Select a category to view commands:**
+Select a category to view commands:
 
 🛡️ **Protection** - Anti-spam, anti-flood, anti-bot
 👑 **Admin** - Ban, mute, warn, kick, etc.
 🔒 **Locks** - Lock chat features
 👥 **Staff** - Manage staff members
-🌐 **General** - Info, stats, language
-"""
+🌐 **General** - Info, stats, language"""
         
         try:
             await callback.message.edit_text(help_text, reply_markup=keyboard)
@@ -215,13 +209,9 @@ class UserHandlers:
             ]
         ])
         
-        text = """
-╔═══════════════════════════════════════════╗
-║          🛡️ Protection Commands 🛡️        ║
-╚═══════════════════════════════════════════╝
+        text = """**🛡️ Protection Commands**
 
-**Click a command to get info:**
-"""
+Click a command to get info:"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -249,13 +239,9 @@ class UserHandlers:
             ]
         ])
         
-        text = """
-╔═══════════════════════════════════════════╗
-║            👑 Admin Commands 👑           ║
-╚═══════════════════════════════════════════╝
+        text = """**👑 Admin Commands**
 
-**Click a command to get info:**
-"""
+Click a command to get info:"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -283,29 +269,23 @@ class UserHandlers:
                     InlineKeyboardButton("📊 Stats", callback_data="stats_main")
                 ],
                 [
-                    InlineKeyboardButton("📢 Channel", url="https://t.me/iMumd"),
-                    InlineKeyboardButton("💬 Support", url="https://t.me/iMumd")
+                    InlineKeyboardButton("📢 Channel", url=config.bot.channel_link),
+                    InlineKeyboardButton("💬 Support", url=config.bot.support_link)
                 ]
             ])
             
-            welcome_text = f"""
-╔═══════════════════════════════════════════╗
-║                                           ║
-║   Welcome to **{config.bot.name}** {config.bot.god_status} Edition!    ║
-║                                           ║
-║   Your powerful Telegram protection bot   ║
-║                                           ║
-╚═══════════════════════════════════════════╝
+            welcome_text = f"""Hi, I'm **{config.bot.name}** {config.bot.god_status} Edition 👋
 
-🛡️ **I can help protect your groups from:**
+I'm your powerful Telegram protection bot 🛡️
+
+I can help protect your groups from:
 • Spam and malicious content
 • Unwanted users
 • Warning system
 • Content locks
 • And much more!
 
-👇 **Select an option below:**
-"""
+Use the buttons below to explore:"""
             
             await message.reply_text(welcome_text, reply_markup=keyboard)
         else:
@@ -339,21 +319,15 @@ class UserHandlers:
             ]
         ])
         
-        help_text = """
-╔═══════════════════════════════════════════╗
-║                                           ║
-║          📖 Available Commands 📖         ║
-║                                           ║
-╚═══════════════════════════════════════════╝
+        help_text = """**📖 Available Commands**
 
-**Select a category to view commands:**
+Select a category to view commands:
 
 🛡️ **Protection** - Anti-spam, anti-flood, anti-bot
 👑 **Admin** - Ban, mute, warn, kick, etc.
 🔒 **Locks** - Lock chat features
 👥 **Staff** - Manage staff members
-🌐 **General** - Info, stats, language
-"""
+🌐 **General** - Info, stats, language"""
         
         await message.reply_text(help_text, reply_markup=keyboard)
     
@@ -391,11 +365,7 @@ class UserHandlers:
         
         keyboard = InlineKeyboardMarkup(buttons)
         
-        text = """
-╔═══════════════════════════════════════════╗
-║          🌐 Select Your Language 🌐       ║
-╚═══════════════════════════════════════════╝
-"""
+        text = """**🌐 Select Your Language**"""
         
         await message.reply_text(text, reply_markup=keyboard)
     
@@ -408,17 +378,13 @@ class UserHandlers:
             [InlineKeyboardButton("🔙 Menu", callback_data="start_main")]
         ])
         
-        text = f"""
-╔═══════════════════════════════════════════╗
-║            📊 Bot Statistics 📊            ║
-╚═══════════════════════════════════════════╝
+        text = f"""**📊 Bot Statistics**
 
 👥 **Total Users:** {stats.get('total_users', 'N/A')}
 💬 **Total Chats:** {stats.get('total_chats', 'N/A')}
 ⚠️ **Total Warnings:** {stats.get('total_warnings', 'N/A')}
 🚫 **Global Bans:** {stats.get('global_bans', 'N/A')}
-🛡️ **Protected Groups:** {stats.get('protected_groups', 'N/A')}
-"""
+🛡️ **Protected Groups:** {stats.get('protected_groups', 'N/A')}"""
         
         await message.reply_text(text, reply_markup=keyboard)
     
@@ -445,24 +411,20 @@ class UserHandlers:
         # Get user info
         user_info = await db.get_user(target.id)
         
-        text = f"""
-╔═══════════════════════════════════════════╗
-║              👤 User Info 👤              ║
-╚═══════════════════════════════════════════╝
+        text = f"""**👤 User Info**
 
-**Name:** {get_mention(target)}
-**ID:** `{target.id}`
-**Username:** @{target.username or 'None'}
-**First Name:** {target.first_name or 'N/A'}
-"""
+👤 **Name:** {get_mention(target)}
+📎 **ID:** `{target.id}`
+🐦 **Username:** @{target.username or 'None'}
+📛 **First Name:** {target.first_name or 'N/A'}"""
         
         if target.last_name:
-            text += f"**Last Name:** {target.last_name}\n"
+            text += f"\n📛 **Last Name:** {target.last_name}"
         
         if user_info:
-            text += f"**Warnings:** {user_info.get('warnings', 0)}\n"
+            text += f"\n⚠️ **Warnings:** {user_info.get('warnings', 0)}"
         
-        text += f"**Status:** {'Member' if not user_info else 'Known User'}\n"
+        text += f"\n**Status:** {'Member' if not user_info else 'Known User'}"
         
         keyboard = InlineKeyboardMarkup([
             [
@@ -487,18 +449,14 @@ class UserHandlers:
                 disable_notification=True
             )
         else:
-            text = f"""
-╔═══════════════════════════════════════════╗
-║                 📎 IDs 📎                  ║
-╚═══════════════════════════════════════════╝
+            text = f"""**📎 IDs**
 
-**Chat ID:** `{message.chat.id}`
-**Your ID:** `{message.from_user.id}`
-"""
+📢 **Chat ID:** `{message.chat.id}`
+👤 **Your ID:** `{message.from_user.id}`"""
             
             if message.reply_to_message:
-                text += f"**User ID:** `{message.reply_to_message.from_user.id}`\n"
-                text += f"**Message ID:** `{message.reply_to_message.id}`\n"
+                text += f"\n👤 **User ID:** `{message.reply_to_message.from_user.id}`"
+                text += f"\n📝 **Message ID:** `{message.reply_to_message.id}`"
             
             keyboard = InlineKeyboardMarkup([
                 [InlineKeyboardButton("🔙 Back", callback_data="start_main")]
@@ -531,22 +489,15 @@ class UserHandlers:
         keyboard = InlineKeyboardMarkup([
             [
                 InlineKeyboardButton("📖 Commands", callback_data="help_main"),
-                InlineKeyboardButton("📢 Channel", url="https://t.me/iMumd")
+                InlineKeyboardButton("📢 Channel", url=config.bot.channel_link)
             ],
             [
-                InlineKeyboardButton("💬 Support", url="https://t.me/iMumd"),
+                InlineKeyboardButton("💬 Support", url=config.bot.support_link),
                 InlineKeyboardButton("🔙 Menu", callback_data="start_main")
             ]
         ])
         
-        about_text = f"""
-╔═══════════════════════════════════════════╗
-║                                           ║
-║          **{config.bot.name} Protection Bot**           ║
-║                                           ║
-║      {config.bot.god_status} Edition - Premium Security       ║
-║                                           ║
-╚═══════════════════════════════════════════╝
+        about_text = f"""**{config.bot.name} Protection Bot**
 
 🤖 **Version:** 1.0.0
 👑 **Developer:** iMumd
@@ -566,8 +517,7 @@ class UserHandlers:
 🔗 **Links:**
 • GitHub: github.com/iMumd/Geo
 • Channel: @iMumd
-• Support: @iMumd
-"""
+• Support: @iMumd"""
         
         await message.reply_text(about_text, reply_markup=keyboard)
     
@@ -578,24 +528,20 @@ class UserHandlers:
             [InlineKeyboardButton("🔙 Back", callback_data="start_main")]
         ])
         
-        rules_text = """
-╔═══════════════════════════════════════════╗
-║              📜 Chat Rules 📜             ║
-╚═══════════════════════════════════════════╝
+        rules_text = """**📜 Chat Rules**
 
-**1.** Respect all members
-**2.** No spam or advertising
-**3.** No NSFW or offensive content
-**4.** No personal attacks or harassment
-**5.** Follow admin instructions
-**6.** Use appropriate language
+1️⃣ Respect all members
+2️⃣ No spam or advertising
+3️⃣ No NSFW or offensive content
+4️⃣ No personal attacks or harassment
+5️⃣ Follow admin instructions
+6️⃣ Use appropriate language
 
 ⚠️ **Breaking rules may result in:**
 • Warning
 • Temporary mute
 • Permanent mute
-• Ban
-"""
+• Ban"""
         
         await message.reply_text(rules_text, reply_markup=keyboard)
     
@@ -629,23 +575,19 @@ class UserHandlers:
             ]
         ])
         
-        text = f"""
-╔═══════════════════════════════════════════╗
-║            ⚙️ Chat Settings ⚙️            ║
-╚═══════════════════════════════════════════╝
+        text = f"""**⚙️ Chat Settings**
 
-**Group:** {message.chat.title}
-**ID:** `{message.chat.id}`
+📢 **Group:** {message.chat.title}
+📎 **ID:** `{message.chat.id}`
 
-**Protection Status:**
-🛡️ Anti-Spam: {antispam}
-🌊 Anti-Flood: {antiflood}
+🛡️ **Protection Status:**
+• Anti-Spam: {antispam}
+• Anti-Flood: {antiflood}
 
-**Features:**
-👋 Welcome: {welcome}
-👋 Goodbye: {goodbye}
-🔒 Locks: {locks}
-"""
+✨ **Features:**
+• Welcome: {welcome}
+• Goodbye: {goodbye}
+• Locks: {locks}"""
         
         await message.reply_text(text, reply_markup=keyboard)
     
@@ -733,17 +675,13 @@ class UserHandlers:
             [InlineKeyboardButton("🔙 Menu", callback_data="start_main")]
         ])
         
-        text = f"""
-╔═══════════════════════════════════════════╗
-║            📊 Bot Statistics 📊            ║
-╚═══════════════════════════════════════════╝
+        text = f"""**📊 Bot Statistics**
 
 👥 **Total Users:** {stats.get('total_users', 'N/A')}
 💬 **Total Chats:** {stats.get('total_chats', 'N/A')}
 ⚠️ **Total Warnings:** {stats.get('total_warnings', 'N/A')}
 🚫 **Global Bans:** {stats.get('global_bans', 'N/A')}
-🛡️ **Protected Groups:** {stats.get('protected_groups', 'N/A')}
-"""
+🛡️ **Protected Groups:** {stats.get('protected_groups', 'N/A')}"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -788,22 +726,18 @@ class UserHandlers:
             ]
         ])
         
-        text = f"""
-╔═══════════════════════════════════════════╗
-║            ⚙️ Chat Settings ⚙️            ║
-╚═══════════════════════════════════════════╝
+        text = f"""**⚙️ Chat Settings**
 
-**Protection Status:**
-🛡️ Anti-Spam: {antispam}
-🌊 Anti-Flood: {antiflood}
+🛡️ **Protection Status:**
+• Anti-Spam: {antispam}
+• Anti-Flood: {antiflood}
 
-**Features:**
-👋 Welcome: {welcome}
-👋 Goodbye: {goodbye}
-🔒 Locks: {locks}
+✨ **Features:**
+• Welcome: {welcome}
+• Goodbye: {goodbye}
+• Locks: {locks}
 
-**Toggle features using the buttons below:**
-"""
+Use the buttons below to toggle features:"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
