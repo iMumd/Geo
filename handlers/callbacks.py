@@ -148,6 +148,14 @@ class CallbackHandlers:
             lock_type = callback.data.replace("locktoggle_", "")
             await self.toggle_lock(callback, lock_type)
         
+        # ==================== GENERAL COMMANDS ====================
+        
+        @self.app.on_callback_query(filters.regex(r"^general_main$"))
+        @handle_errors
+        async def cb_general_main(client, callback: CallbackQuery):
+            """General commands menu"""
+            await self.show_general_menu(callback)
+        
         # ==================== COMMAND INFO ====================
         
         @self.app.on_callback_query(filters.regex(r"^cmd_"))
