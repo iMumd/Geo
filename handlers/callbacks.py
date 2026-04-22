@@ -51,13 +51,45 @@ class CallbackHandlers:
         @handle_errors
         async def cb_back_main(client, callback: CallbackQuery):
             """Back to main menu"""
-            await self.show_main_menu(callback)
+            keyboard = InlineKeyboardMarkup([
+                [
+                    InlineKeyboardButton("📖 Commands", callback_data="help_main"),
+                    InlineKeyboardButton("📢 Channel", url=config.bot.channel_link)
+                ]
+            ])
+            
+            text = """Hi, I'm Geo!
+I can help protect your groups
+
+Use /help to see commands"""
+            
+            try:
+                await callback.message.edit_text(text, reply_markup=keyboard)
+            except:
+                await callback.message.reply_text(text, reply_markup=keyboard)
+            await callback.answer()
         
         @self.app.on_callback_query(filters.regex(r"^back_help$"))
         @handle_errors
         async def cb_back_help(client, callback: CallbackQuery):
             """Back to help menu"""
-            await self.show_help_menu(callback)
+            keyboard = InlineKeyboardMarkup([
+                [
+                    InlineKeyboardButton("📖 Commands", callback_data="help_main"),
+                    InlineKeyboardButton("📢 Channel", url=config.bot.channel_link)
+                ]
+            ])
+            
+            text = """Hi, I'm Geo!
+I can help protect your groups
+
+Use /help to see commands"""
+            
+            try:
+                await callback.message.edit_text(text, reply_markup=keyboard)
+            except:
+                await callback.message.reply_text(text, reply_markup=keyboard)
+            await callback.answer()
         
         @self.app.on_callback_query(filters.regex(r"^support_info$"))
         @handle_errors
