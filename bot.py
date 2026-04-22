@@ -67,29 +67,6 @@ class GeoBot:
         except Exception as e:
             logger.warning(f"Cache connection failed (running without cache): {e}")
         
-        # Validate configuration
-        try:
-            config.validate()
-            logger.info("✓ Configuration validated")
-        except ValueError as e:
-            logger.error(f"Configuration error: {e}")
-            raise
-        
-        # Initialize database
-        try:
-            await db.initialize()
-            logger.info("✓ Database initialized")
-        except Exception as e:
-            logger.error(f"Database initialization failed: {e}")
-            raise
-        
-        # Initialize cache
-        try:
-            await cache.connect()
-            logger.info("✓ Cache connected")
-        except Exception as e:
-            logger.warning(f"Cache connection failed (running without cache): {e}")
-        
         # Initialize Pyrogram client
         self.app = Client(
             name=config.bot.username,
