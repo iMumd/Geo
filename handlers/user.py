@@ -284,7 +284,14 @@ Click a command to get info:"""
     
     async def handle_start(self, client: Client, message: Message):
         """Handle /start command"""
+        import os
         args = message.text.split()[1:]
+        
+        # Path to welcome GIF
+        gif_path = os.path.join("assets", "HelloGeo.gif")
+        
+        # Check if GIF exists
+        has_gif = os.path.exists(gif_path)
         
         # Check if PM or group
         if message.chat.type == ChatType.PRIVATE:
@@ -319,7 +326,15 @@ Use /help to see admin commands or add me to your group to access settings.
 
 Use the buttons below to explore:"""
             
-            await message.reply_text(welcome_text, reply_markup=keyboard)
+            # Send with GIF if available
+            if has_gif:
+                await message.reply_animation(
+                    gif=gif_path,
+                    caption=welcome_text,
+                    reply_markup=keyboard
+                )
+            else:
+                await message.reply_text(welcome_text, reply_markup=keyboard)
         else:
             # In group
             keyboard = InlineKeyboardMarkup([

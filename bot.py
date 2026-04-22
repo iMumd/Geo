@@ -37,41 +37,35 @@ class GeoBot:
         self.app: Optional[Client] = None
         self._running = False
         self.start_time = 0
-        
-        # Initialize Pyrogram client
-        self.app = Client(
-            name=config.bot.username,
-            api_id=config.telegram.api_id,
-            api_hash=config.telegram.api_hash,
-            bot_token=config.bot.token,
-            plugins=dict(
-                root="plugins"
-            ),
-            workdir=".",
-            app_version=config.telegram.app_version,
-            device_model=config.telegram.device_model,
-            lang_code=config.telegram.lang_code,
-        )
-        
-        logger.info(f"✓ Bot client created: {config.bot.name} (@{config.bot.username})")
-        
-        # Load handlers
-        await self.load_handlers()
-        
-        logger.info("✓ Handlers loaded")
-        logger.info("=" * 60)
-        logger.info("  Geo Protection Bot - Ready!")
-        logger.info("=" * 60)
-        
-        # Set bot start time for uptime tracking
-        self.start_time = asyncio.get_event_loop().time()
-        set_bot_start_time(self.start_time)
     
     async def initialize(self):
         """Initialize bot and all components"""
         logger.info("=" * 60)
         logger.info("  Geo Protection Bot - Initializing...")
         logger.info("=" * 60)
+        
+        # Validate configuration
+        try:
+            config.validate()
+            logger.info("✓ Configuration validated")
+        except ValueError as e:
+            logger.error(f"Configuration error: {e}")
+            raise
+        
+        # Initialize database
+        try:
+            await db.initialize()
+            logger.info("✓ Database initialized")
+        except Exception as e:
+            logger.error(f"Database initialization failed: {e}")
+            raise
+        
+        # Initialize cache
+        try:
+            await cache.connect()
+            logger.info("✓ Cache connected")
+        except Exception as e:
+            logger.warning(f"Cache connection failed (running without cache): {e}")
         
         # Validate configuration
         try:
