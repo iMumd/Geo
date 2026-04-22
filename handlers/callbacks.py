@@ -582,6 +582,7 @@ Click on a language button to change the language! 👆"""
         """Show bot stats with dynamic timing"""
         import time
         from datetime import datetime
+        from bot import get_uptime
         
         start_time = time.time()
         
@@ -593,6 +594,10 @@ Click on a language button to change the language! 👆"""
         
         # Calculate load time
         load_time = round((time.time() - start_time) * 1000, 1)
+        
+        # Get bot uptime
+        uptime_seconds = get_uptime()
+        uptime_str = self._format_uptime(uptime_seconds) if uptime_seconds > 0 else "N/A"
         
         # Format stats
         total_users = stats.get('total_users', 'N/A')
@@ -621,7 +626,8 @@ Click on a language button to change the language! 👆"""
 ━━━━━━━━━━━━━━━━━━━━━━
 
 ⚡ **Load Time:** `{load_time}ms`
-🕐 **Updated:** `{datetime.now().strftime('%H:%M:%S')}`"""
+🕐 **Updated:** `{datetime.now().strftime('%H:%M:%S')}`
+⏳ **Uptime:** `{uptime_str}`"""
         
         if is_refresh:
             # Edit the same message on refresh
@@ -638,6 +644,25 @@ Click on a language button to change the language! 👆"""
                 await callback.message.reply_text(text, reply_markup=keyboard)
         
         await callback.answer()
+    
+    def _format_uptime(self, seconds: int) -> str:
+        """Format uptime seconds to human readable string"""
+        days = seconds // 86400
+        hours = (seconds % 86400) // 3600
+        minutes = (seconds % 3600) // 60
+        secs = seconds % 60
+        
+        parts = []
+        if days > 0:
+            parts.append(f"{days}d")
+        if hours > 0:
+            parts.append(f"{hours}h")
+        if minutes > 0:
+            parts.append(f"{minutes}m")
+        if secs > 0 or not parts:
+            parts.append(f"{secs}s")
+        
+        return " ".join(parts[:2])  # Max 2 units for readability
     
     # ==================== SETTINGS ====================
     

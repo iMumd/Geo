@@ -15,6 +15,20 @@ from database.cache import cache
 
 logger = logging.getLogger(__name__)
 
+# Global bot uptime tracker
+_bot_start_time: float = 0
+
+
+def set_bot_start_time(t: float):
+    """Set bot start time from bot.py"""
+    global _bot_start_time
+    _bot_start_time = t
+
+
+def get_uptime() -> int:
+    """Get bot uptime in seconds"""
+    return int(asyncio.get_event_loop().time() - _bot_start_time) if _bot_start_time else 0
+
 
 class GeoBot:
     """Main Geo Protection Bot class"""
@@ -22,6 +36,36 @@ class GeoBot:
     def __init__(self):
         self.app: Optional[Client] = None
         self._running = False
+        self.start_time = 0
+        
+        # Initialize Pyrogram client
+        self.app = Client(
+            name=config.bot.username,
+            api_id=config.telegram.api_id,
+            api_hash=config.telegram.api_hash,
+            bot_token=config.bot.token,
+            plugins=dict(
+                root="plugins"
+            ),
+            workdir=".",
+            app_version=config.telegram.app_version,
+            device_model=config.telegram.device_model,
+            lang_code=config.telegram.lang_code,
+        )
+        
+        logger.info(f"✓ Bot client created: {config.bot.name} (@{config.bot.username})")
+        
+        # Load handlers
+        await self.load_handlers()
+        
+        logger.info("✓ Handlers loaded")
+        logger.info("=" * 60)
+        logger.info("  Geo Protection Bot - Ready!")
+        logger.info("=" * 60)
+        
+        # Set bot start time for uptime tracking
+        self.start_time = asyncio.get_event_loop().time()
+        set_bot_start_time(self.start_time)
     
     async def initialize(self):
         """Initialize bot and all components"""
@@ -76,6 +120,9 @@ class GeoBot:
         logger.info("=" * 60)
         logger.info("  Geo Protection Bot - Ready!")
         logger.info("=" * 60)
+        
+        # Set bot start time for uptime tracking
+        self.start_time = asyncio.get_event_loop().time()
         
         self._running = True
     
