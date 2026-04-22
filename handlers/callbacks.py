@@ -253,12 +253,36 @@ class CallbackHandlers:
     
     async def show_main_menu(self, callback: CallbackQuery):
         """Show main menu for regular users"""
-        keyboard = InlineKeyboardMarkup([
-            [
-                InlineKeyboardButton("📖 Commands", callback_data="help_main"),
-                InlineKeyboardButton("📢 Channel", url=config.bot.channel_link)
-            ]
+        from pyrogram.enums import ChatType
+        
+        keyboard_buttons = []
+        
+        # Check if in group and user is admin
+        if callback.message.chat.type != ChatType.PRIVATE:
+            try:
+                chat_member = await callback.client.get_chat_member(
+                    callback.message.chat.id, 
+                    callback.from_user.id
+                )
+                is_admin = chat_member.status in ['creator', 'administrator']
+            except:
+                is_admin = False
+        else:
+            is_admin = False
+        
+        # Add user buttons
+        keyboard_buttons.append([
+            InlineKeyboardButton("📖 Commands", callback_data="help_main"),
+            InlineKeyboardButton("📢 Channel", url=config.bot.channel_link)
         ])
+        
+        # Add admin panel if user is admin
+        if is_admin:
+            keyboard_buttons.append([
+                InlineKeyboardButton("⚙️ Admin Panel", callback_data="admin_main")
+            ])
+        
+        keyboard = InlineKeyboardMarkup(keyboard_buttons)
         
         text = f"""Hi, I'm {config.bot.name} {config.bot.god_status} Edition!
 
@@ -394,7 +418,15 @@ Click a button above to learn more!"""
                 InlineKeyboardButton("🗑️ Purge", callback_data="cmd_purge")
             ],
             [
-                InlineKeyboardButton("🔙 Back", callback_data="back_help")
+                InlineKeyboardButton("👥 Staff List", callback_data="staff_refresh"),
+                InlineKeyboardButton("🚫 GBan List", callback_data="gban_refresh")
+            ],
+            [
+                InlineKeyboardButton("✅ Approved List", callback_data="approved_refresh"),
+                InlineKeyboardButton("📊 Stats", callback_data="stats_main")
+            ],
+            [
+                InlineKeyboardButton("🔙 Back", callback_data="back_main")
             ]
         ])
         
@@ -402,12 +434,19 @@ Click a button above to learn more!"""
 
 Here are the admin tools available:
 
+Moderation:
 - Ban/Unban - Permanently ban or unban users
 - Kick - Remove a user from the group
 - Mute/Unmute - Temporarily mute a user
 - Warn - Issue warnings to users
 - Pin/Unpin - Pin messages in chat
 - Purge - Delete multiple messages
+
+Management:
+- Staff List - View all group admins
+- GBan List - View globally banned users
+- Approved List - View approved users
+- Stats - View bot statistics
 
 Click a button above to learn more!"""
         
@@ -467,11 +506,7 @@ Click any button to toggle!"""
         """Show general commands"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("📊 Stats", callback_data="stats_main"),
-                InlineKeyboardButton("🌐 Language", callback_data="languages_main")
-            ],
-            [
-                InlineKeyboardButton("📋 Staff", callback_data="staff_main"),
+                InlineKeyboardButton("🌐 Language", callback_data="languages_main"),
                 InlineKeyboardButton("📜 Rules", callback_data="cmd_rules")
             ],
             [
@@ -484,9 +519,7 @@ General Commands
 
 These are general commands available to all users:
 
-Stats - View bot statistics and info
 Language - Change the bot language
-Staff - View group staff members
 Rules - View group rules
 
 Use the buttons above to explore!"""
@@ -501,26 +534,15 @@ Use the buttons above to explore!"""
         """Show staff menu"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("👥 Staff List", callback_data="staff_refresh"),
-                InlineKeyboardButton("🚫 GBan List", callback_data="gban_refresh")
-            ],
-            [
-                InlineKeyboardButton("✅ Approved List", callback_data="approved_refresh")
-            ],
-            [
-                InlineKeyboardButton("🔙 Back", callback_data="back_main")
+                InlineKeyboardButton("🔙 Back", callback_data="back_help")
             ]
         ])
         
         text = """Staff Menu
 
-View and manage staff-related lists:
+This section is for group admins only.
 
-- Staff List - View all group admins
-- GBan List - View globally banned users
-- Approved List - View approved users
-
-Use the buttons above to explore!"""
+Use /help to see the admin commands."""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
