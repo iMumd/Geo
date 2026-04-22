@@ -21,6 +21,9 @@ class BotConfig:
     developer_id: int = int(os.getenv("DEVELOPER_ID", 0))
     god_mode: bool = os.getenv("GOD_MODE", "true").lower() == "true"
     god_status: str = os.getenv("GOD_STATUS", "Mythic")
+    support_link: str = os.getenv("SUPPORT_LINK", "https://t.me/iMumd")
+    channel_link: str = os.getenv("CHANNEL_LINK", "https://t.me/iMumd")
+    github_link: str = os.getenv("GITHUB_LINK", "https://github.com/iMumd/Geo")
 
 
 @dataclass
