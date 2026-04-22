@@ -4,6 +4,7 @@
 
 import asyncio
 import logging
+import sys
 from typing import Optional
 from pyrogram import Client, filters
 from pyrogram.types import Message
@@ -168,15 +169,19 @@ bot = GeoBot()
 
 async def main():
     """Main entry point"""
-    # Configure logging
+    # Configure logging with Unicode support
     logging.basicConfig(
         level=getattr(logging, config.logging.level),
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         handlers=[
-            logging.FileHandler(config.logging.file),
-            logging.StreamHandler()
+            logging.FileHandler(config.logging.file, encoding='utf-8'),
+            logging.StreamHandler(sys.stdout)
         ]
     )
+    # Fix StreamHandler encoding for Windows
+    for handler in logging.root.handlers:
+        if isinstance(handler, logging.StreamHandler):
+            handler.stream = sys.stdout
     
     try:
         await bot.initialize()

@@ -249,8 +249,19 @@ def log_command(func: Callable) -> Callable:
         chat = message.chat
         command = message.text.split()[0] if message.text else "Unknown"
         
-        logger.info(f"Command '{command}' called by {user.first_name} "
-                   f"({user.id}) in {chat.title} ({chat.id})")
+        # Use ASCII-safe representation for logging
+        try:
+            user_name = user.first_name.encode('ascii', 'replace').decode('ascii')
+        except:
+            user_name = str(user.id)
+        
+        try:
+            chat_title = chat.title.encode('ascii', 'replace').decode('ascii') if chat.title else "Private"
+        except:
+            chat_title = str(chat.id)
+        
+        logger.info(f"Command '{command}' called by {user_name} "
+                   f"({user.id}) in {chat_title} ({chat.id})")
         
         return await func(client, message, *args, **kwargs)
     
