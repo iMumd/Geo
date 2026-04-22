@@ -1,7 +1,0 @@
-[
-  {
-    "timestamp": "2026-04-22T13:04:25.704157",
-    "category": "summary",
-    "content": "Fixed all inline keyboard callbacks in Geo bot:\n\n1. **Centralized callbacks**: All callbacks now handled by handlers/callbacks.py to prevent conflicts\n\n2. **Fixed duplicates**: Removed duplicate callback handlers from user.py, admin.py, and moderation.py\n\n3. **Fixed settings**: Added proper group check in show_settings_menu to prevent \"settings not found\" errors\n\n4. **Fixed locks**: Added group check in show_locktypes callback\n\n5. **Added general_main**: Added missing callback handler for General commands button\n\n6. **All group-only features**: Staff, approved, warns, ban/unban all check for group context\n\nAll commits pushed to GitHub master branch."
-  }
-]

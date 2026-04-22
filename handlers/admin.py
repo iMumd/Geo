@@ -2,6 +2,8 @@
 # Geo Protection Bot - Admin Handlers
 # ═══════════════════════════════════════════════════════════════
 
+from typing import Optional
+
 from pyrogram import Client, filters
 from pyrogram.types import Message, ChatPermissions, InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 from pyrogram.enums import ChatType
