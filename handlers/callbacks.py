@@ -702,6 +702,11 @@ class CallbackHandlers:
     
     async def show_locktypes(self, callback: CallbackQuery):
         """Show lock types"""
+        # Check if in group
+        if callback.message.chat.type == ChatType.PRIVATE:
+            await callback.answer("⚠️ Locks are only available in groups!", show_alert=True)
+            return
+        
         lock_types = [
             ("links", "🔗 Links", "lock_links"),
             ("spam", "🚫 Spam", "lock_spam"),
