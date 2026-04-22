@@ -285,36 +285,27 @@ The bot needs **Admin with Full Permissions** in groups to function properly:
 2. Ensure sufficient disk space
 3. Verify database integrity
 
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
-
 ## 📧 Contact
 
-**Developer**: iMumd
-**GitHub**: https://github.com/iMumd/Geo
-**Telegram**: @iMumd
+**Developer**: @user9JKsuG
+**Status**: Mythic (Developer)
 
-## ⭐ Support
+---
 
-If this bot helped you, please give it a star!
+**Version**: 1.0.0 Private Edition  
+**License**: Private - Not for public distribution  
+**Repository**: https://github.com/iMumd/Geo (Private)
 
 ---
 
 ```
 ╔══════════════════════════════════════════════════════════════╗
 ║                                                              ║
-║   💪 Geo Protection Bot - Built with ❤️ for safer groups 💪  ║
+║   💪 Geo Protection Bot - Built with ❤️ for safer groups 💪   ║
 ║                                                              ║
-║   ⚡ Multi-threaded • Secure • Powerful • Fast ⚡            ║
+║   ⚡ Multi-threaded • Secure • Powerful • Fast ⚡             ║
+║                                                              ║
+║   🌟 Mythic Developer: @user9JKsuG 🌟                        ║
 ║                                                              ║
 ╚══════════════════════════════════════════════════════════════╝
 ```
