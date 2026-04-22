@@ -119,33 +119,18 @@ class UserHandlers:
         keyboard = InlineKeyboardMarkup([
             [
                 InlineKeyboardButton("📖 Commands", callback_data="help_main"),
-                InlineKeyboardButton("🛡️ Protection", callback_data="protection_main")
+                InlineKeyboardButton("📢 Channel", url=config.bot.channel_link)
             ],
             [
-                InlineKeyboardButton("🌐 Language", callback_data="languages_main"),
-                InlineKeyboardButton("📜 Rules", callback_data="cmd_rules")
-            ],
-            [
-                InlineKeyboardButton("📢 Channel", url=config.bot.channel_link),
                 InlineKeyboardButton("💬 Support", callback_data="support_info")
             ]
         ])
         
-        welcome_text = f"""Hi, I'm **{config.bot.name}** {config.bot.god_status} Edition 👋
+        welcome_text = f"""Hi, I'm **{config.bot.name}**!
 
-I'm your powerful Telegram protection bot 🛡️
+I can help protect your groups
 
-I can help protect your groups from:
-• Spam and malicious content
-• Unwanted users
-• Warning system
-• Content locks
-• And much more!
-
-**For Admins:**
-Use /help to see admin commands or add me to your group to access settings.
-
-Use the buttons below to explore:"""
+Use /help to see commands"""
         
         try:
             await callback.message.edit_text(welcome_text, reply_markup=keyboard)
@@ -157,7 +142,7 @@ Use the buttons below to explore:"""
         """Show support information"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("💬 Join Support", url=config.bot.support_link),
+                InlineKeyboardButton("💬 Support", url=config.bot.support_link),
                 InlineKeyboardButton("📢 Channel", url=config.bot.channel_link)
             ],
             [
