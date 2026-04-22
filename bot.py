@@ -197,6 +197,13 @@ async def main():
             logging.StreamHandler(sys.stdout)
         ]
     )
+    
+    # Reduce Pyrogram logging noise
+    logging.getLogger("pyrogram.session.session").setLevel(logging.WARNING)
+    logging.getLogger("pyrogram.connection.connection").setLevel(logging.WARNING)
+    logging.getLogger("pyrogram.client").setLevel(logging.WARNING)
+    logging.getLogger("pyrogram.dispatcher").setLevel(logging.WARNING)
+    
     # Fix StreamHandler encoding for Windows
     for handler in logging.root.handlers:
         if isinstance(handler, logging.StreamHandler):
