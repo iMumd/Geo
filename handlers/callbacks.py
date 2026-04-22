@@ -255,8 +255,8 @@ class CallbackHandlers:
         """Show main menu for regular users"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("Commands", callback_data="help_main"),
-                InlineKeyboardButton("Channel", url=config.bot.channel_link)
+                InlineKeyboardButton("📖 Commands", callback_data="help_main"),
+                InlineKeyboardButton("📢 Channel", url=config.bot.channel_link)
             ]
         ])
         
@@ -276,13 +276,13 @@ Use /help to see commands"""
         """Show support information"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("Channel", url=config.bot.channel_link)
+                InlineKeyboardButton("📢 Channel", url=config.bot.channel_link)
             ],
             [
-                InlineKeyboardButton("Add to Group", url=f"https://t.me/{config.bot.username}?startgroup=true")
+                InlineKeyboardButton("➕ Add to Group", url=f"https://t.me/{config.bot.username}?startgroup=true")
             ],
             [
-                InlineKeyboardButton("Back", callback_data="back_main")
+                InlineKeyboardButton("🔙 Back", callback_data="back_main")
             ]
         ])
         
@@ -310,16 +310,16 @@ For admin features, use the inline menu after adding me to your group!"""
         """Show help/commands menu"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("Protection", callback_data="protection_main"),
-                InlineKeyboardButton("Admin", callback_data="admin_main")
+                InlineKeyboardButton("🛡️ Protection", callback_data="protection_main"),
+                InlineKeyboardButton("👑 Admin", callback_data="admin_main")
             ],
             [
-                InlineKeyboardButton("Locks", callback_data="locks_main"),
-                InlineKeyboardButton("Staff", callback_data="staff_main")
+                InlineKeyboardButton("🔒 Locks", callback_data="locks_main"),
+                InlineKeyboardButton("👥 Staff", callback_data="staff_main")
             ],
             [
-                InlineKeyboardButton("General", callback_data="general_main"),
-                InlineKeyboardButton("Back", callback_data="back_main")
+                InlineKeyboardButton("🌐 General", callback_data="general_main"),
+                InlineKeyboardButton("🔙 Back", callback_data="back_main")
             ]
         ])
         
@@ -343,19 +343,19 @@ Click on a category above to see the commands!"""
         """Show protection commands"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("Anti-Spam", callback_data="cmd_antispam"),
-                InlineKeyboardButton("Anti-Flood", callback_data="cmd_antiflood")
+                InlineKeyboardButton("🛡️ Anti-Spam", callback_data="cmd_antispam"),
+                InlineKeyboardButton("🌊 Anti-Flood", callback_data="cmd_antiflood")
             ],
             [
-                InlineKeyboardButton("Anti-Bot", callback_data="cmd_antibot"),
-                InlineKeyboardButton("Anti-Raid", callback_data="cmd_antiraid")
+                InlineKeyboardButton("🤖 Anti-Bot", callback_data="cmd_antibot"),
+                InlineKeyboardButton("⚔️ Anti-Raid", callback_data="cmd_antiraid")
             ],
             [
-                InlineKeyboardButton("Anti-Scam", callback_data="cmd_antiscam"),
-                InlineKeyboardButton("Anti-Porn", callback_data="cmd_antiporn")
+                InlineKeyboardButton("🎭 Anti-Scam", callback_data="cmd_antiscam"),
+                InlineKeyboardButton("🔞 Anti-Porn", callback_data="cmd_antiporn")
             ],
             [
-                InlineKeyboardButton("Back", callback_data="back_help")
+                InlineKeyboardButton("🔙 Back", callback_data="back_help")
             ]
         ])
         
@@ -382,19 +382,19 @@ Click a button above to learn more!"""
         """Show admin commands"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("Ban/Unban", callback_data="cmd_ban"),
-                InlineKeyboardButton("Kick", callback_data="cmd_kick")
+                InlineKeyboardButton("🔨 Ban/Unban", callback_data="cmd_ban"),
+                InlineKeyboardButton("👢 Kick", callback_data="cmd_kick")
             ],
             [
-                InlineKeyboardButton("Mute/Unmute", callback_data="cmd_mute"),
-                InlineKeyboardButton("Warn", callback_data="cmd_warn")
+                InlineKeyboardButton("🔇 Mute/Unmute", callback_data="cmd_mute"),
+                InlineKeyboardButton("⚠️ Warn", callback_data="cmd_warn")
             ],
             [
-                InlineKeyboardButton("Pin/Unpin", callback_data="cmd_pin"),
-                InlineKeyboardButton("Purge", callback_data="cmd_purge")
+                InlineKeyboardButton("📌 Pin/Unpin", callback_data="cmd_pin"),
+                InlineKeyboardButton("🗑️ Purge", callback_data="cmd_purge")
             ],
             [
-                InlineKeyboardButton("Back", callback_data="back_help")
+                InlineKeyboardButton("🔙 Back", callback_data="back_help")
             ]
         ])
         
@@ -421,24 +421,24 @@ Click a button above to learn more!"""
         """Show locks commands"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("Links", callback_data="locktoggle_links"),
-                InlineKeyboardButton("Forwards", callback_data="locktoggle_forward")
+                InlineKeyboardButton("🔗 Links", callback_data="locktoggle_links"),
+                InlineKeyboardButton("🔄 Forwards", callback_data="locktoggle_forward")
             ],
             [
-                InlineKeyboardButton("Audio", callback_data="locktoggle_audio"),
-                InlineKeyboardButton("Video", callback_data="locktoggle_video")
+                InlineKeyboardButton("🎵 Audio", callback_data="locktoggle_audio"),
+                InlineKeyboardButton("🎬 Video", callback_data="locktoggle_video")
             ],
             [
-                InlineKeyboardButton("Photos", callback_data="locktoggle_photo"),
-                InlineKeyboardButton("Documents", callback_data="locktoggle_document")
+                InlineKeyboardButton("🖼️ Photos", callback_data="locktoggle_photo"),
+                InlineKeyboardButton("📄 Documents", callback_data="locktoggle_document")
             ],
             [
-                InlineKeyboardButton("Stickers", callback_data="locktoggle_sticker"),
-                InlineKeyboardButton("Locations", callback_data="locktoggle_location")
+                InlineKeyboardButton("🎭 Stickers", callback_data="locktoggle_sticker"),
+                InlineKeyboardButton("📍 Locations", callback_data="locktoggle_location")
             ],
             [
-                InlineKeyboardButton("Refresh", callback_data="locktypes_refresh"),
-                InlineKeyboardButton("Back", callback_data="back_help")
+                InlineKeyboardButton("🔄 Refresh", callback_data="locktypes_refresh"),
+                InlineKeyboardButton("🔙 Back", callback_data="back_help")
             ]
         ])
         
@@ -467,15 +467,15 @@ Click any button to toggle!"""
         """Show general commands"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("Stats", callback_data="stats_main"),
-                InlineKeyboardButton("Language", callback_data="languages_main")
+                InlineKeyboardButton("📊 Stats", callback_data="stats_main"),
+                InlineKeyboardButton("🌐 Language", callback_data="languages_main")
             ],
             [
-                InlineKeyboardButton("Staff", callback_data="staff_main"),
-                InlineKeyboardButton("Rules", callback_data="cmd_rules")
+                InlineKeyboardButton("📋 Staff", callback_data="staff_main"),
+                InlineKeyboardButton("📜 Rules", callback_data="cmd_rules")
             ],
             [
-                InlineKeyboardButton("Back", callback_data="back_help")
+                InlineKeyboardButton("🔙 Back", callback_data="back_help")
             ]
         ])
         
@@ -501,14 +501,14 @@ Use the buttons above to explore!"""
         """Show staff menu"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("Staff List", callback_data="staff_refresh"),
-                InlineKeyboardButton("GBan List", callback_data="gban_refresh")
+                InlineKeyboardButton("👥 Staff List", callback_data="staff_refresh"),
+                InlineKeyboardButton("🚫 GBan List", callback_data="gban_refresh")
             ],
             [
-                InlineKeyboardButton("Approved List", callback_data="approved_refresh")
+                InlineKeyboardButton("✅ Approved List", callback_data="approved_refresh")
             ],
             [
-                InlineKeyboardButton("Back", callback_data="back_main")
+                InlineKeyboardButton("🔙 Back", callback_data="back_main")
             ]
         ])
         
