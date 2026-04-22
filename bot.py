@@ -106,6 +106,10 @@ class GeoBot:
                 f"**{config.bot.name}** Version 1.0.0\n"
                 f"Status: **{config.bot.god_status}** Edition"
             )
+        
+        # Load callback handlers
+        from handlers.callbacks import CallbackHandlers
+        CallbackHandlers(self.app)
     
     async def start(self):
         """Start the bot"""

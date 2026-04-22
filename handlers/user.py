@@ -23,6 +23,7 @@ class UserHandlers:
         self.app = app
         self._register_handlers()
         self._register_callbacks()
+        logger.info("✓ User handlers loaded")
     
     def _register_handlers(self):
         """Register command handlers"""
@@ -104,26 +105,10 @@ class UserHandlers:
             await self.handle_settings(client, message)
     
     def _register_callbacks(self):
-        """Register callback handlers"""
-        
-        @self.app.on_callback_query(filters.regex(r"^(start|help|setlang|languages|stats|info|about|rules|settings)"))
-        @handle_errors
-        async def main_callback_handler(client, callback: CallbackQuery):
-            await self.handle_callback(client, callback)
-        
-        # Back button handler
-        @self.app.on_callback_query(filters.regex(r"^back_"))
-        @handle_errors
-        async def back_handler(client, callback: CallbackQuery):
-            data = callback.data.replace("back_", "")
-            if data == "main":
-                await self.show_main_menu(callback)
-            elif data == "help":
-                await self.show_help_menu(callback)
-            elif data == "protection":
-                await self.show_protection_menu(callback)
-            elif data == "admin":
-                await self.show_admin_menu(callback)
+        """Register callback handlers - delegated to global CallbackHandlers"""
+        # All callbacks are now handled by handlers/callbacks.py
+        # This method is kept for potential future specific user callbacks
+        pass
     
     async def show_main_menu(self, callback: CallbackQuery):
         """Show main menu"""
@@ -768,12 +753,12 @@ class UserHandlers:
     
     async def show_settings_menu(self, callback: CallbackQuery):
         """Show settings menu"""
-        # Try to get chat ID from message
-        chat_id = callback.message.chat.id if hasattr(callback.message.chat, 'id') else None
-        
-        if not chat_id or chat_id > 0:
+        # Check if in group
+        if callback.message.chat.type == ChatType.PRIVATE:
             await callback.answer("⚠️ Settings are only available in groups!", show_alert=True)
             return
+        
+        chat_id = callback.message.chat.id
         
         settings = await db.get_group_settings(chat_id)
         
