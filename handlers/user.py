@@ -118,11 +118,8 @@ class UserHandlers:
         """Show main menu for regular users"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("📖 Commands", callback_data="help_main"),
-                InlineKeyboardButton("📢 Channel", url=config.bot.channel_link)
-            ],
-            [
-                InlineKeyboardButton("💬 Support", callback_data="support_info")
+                InlineKeyboardButton("Commands", callback_data="help_main"),
+                InlineKeyboardButton("Channel", url=config.bot.channel_link)
             ]
         ])
         
@@ -281,11 +278,8 @@ Click a command to get info:"""
         if message.chat.type == ChatType.PRIVATE:
             keyboard = InlineKeyboardMarkup([
                 [
-                    InlineKeyboardButton("📖 Commands", callback_data="help_main"),
-                    InlineKeyboardButton("📢 Channel", url=config.bot.channel_link)
-                ],
-                [
-                    InlineKeyboardButton("💬 Support", callback_data="support_info")
+                    InlineKeyboardButton("Commands", callback_data="help_main"),
+                    InlineKeyboardButton("Channel", url=config.bot.channel_link)
                 ]
             ])
             
@@ -306,13 +300,13 @@ Use /help to see commands"""
         else:
             # In group
             keyboard = InlineKeyboardMarkup([
-                [InlineKeyboardButton("📖 Commands", callback_data="help_main")],
-                [InlineKeyboardButton("🛡️ Protection", callback_data="protection_main")]
+                [InlineKeyboardButton("Commands", callback_data="help_main")],
+                [InlineKeyboardButton("Protection", callback_data="protection_main")]
             ])
             
             await message.reply_text(
-                f"👋 Hello! I'm **{config.bot.name}**, your group's protector!\n"
-                f"👇 Use the buttons below to explore:",
+                f"Hello! I'm {config.bot.name}, your group's protector!\n"
+                f"Use the buttons below to explore:",
                 reply_markup=keyboard,
                 disable_notification=True
             )

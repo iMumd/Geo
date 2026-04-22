@@ -255,34 +255,16 @@ class CallbackHandlers:
         """Show main menu for regular users"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("📖 Commands", callback_data="help_main"),
-                InlineKeyboardButton("🛡️ Protection", callback_data="protection_main")
-            ],
-            [
-                InlineKeyboardButton("🌐 Language", callback_data="languages_main"),
-                InlineKeyboardButton("📜 Rules", callback_data="cmd_rules")
-            ],
-            [
-                InlineKeyboardButton("📢 Channel", url=config.bot.channel_link),
-                InlineKeyboardButton("💬 Support", callback_data="support_info")
+                InlineKeyboardButton("Commands", callback_data="help_main"),
+                InlineKeyboardButton("Channel", url=config.bot.channel_link)
             ]
         ])
         
-        text = f"""Hi, I'm **{config.bot.name}** {config.bot.god_status} Edition 👋
+        text = f"""Hi, I'm {config.bot.name} {config.bot.god_status} Edition!
 
-I'm your powerful Telegram protection bot 🛡️
+I can help protect your groups
 
-I can help protect your groups from:
-• Spam and malicious content
-• Unwanted users
-• Warning system
-• Content locks
-• And much more!
-
-**For Admins:**
-Use /help to see admin commands or add me to your group to access settings.
-
-Use the buttons below to explore:"""
+Use /help to see commands"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -294,26 +276,24 @@ Use the buttons below to explore:"""
         """Show support information"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("💬 Join Support", url=config.bot.support_link),
-                InlineKeyboardButton("📢 Channel", url=config.bot.channel_link)
+                InlineKeyboardButton("Channel", url=config.bot.channel_link)
             ],
             [
-                InlineKeyboardButton("➕ Add to Group", url=f"https://t.me/{config.bot.username}?startgroup=true")
+                InlineKeyboardButton("Add to Group", url=f"https://t.me/{config.bot.username}?startgroup=true")
             ],
             [
-                InlineKeyboardButton("🔙 Back", callback_data="back_main")
+                InlineKeyboardButton("Back", callback_data="back_main")
             ]
         ])
         
-        text = f"""💬 **Support Information**
+        text = f"""Support Information
 
 Need help? Here's how to reach us:
 
-👥 **Support Group:** {config.bot.support_link}
-📢 **Channel:** {config.bot.channel_link}
-🤖 **Bot:** @{config.bot.username}
+Channel: {config.bot.channel_link}
+Bot: @{config.bot.username}
 
-**How to use me:**
+How to use me:
 1. Add me to your group
 2. Make me an admin
 3. Use /help to see all commands
@@ -330,28 +310,28 @@ For admin features, use the inline menu after adding me to your group!"""
         """Show help/commands menu"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("🛡️ Protection", callback_data="protection_main"),
-                InlineKeyboardButton("👑 Admin", callback_data="admin_main")
+                InlineKeyboardButton("Protection", callback_data="protection_main"),
+                InlineKeyboardButton("Admin", callback_data="admin_main")
             ],
             [
-                InlineKeyboardButton("🔒 Locks", callback_data="locks_main"),
-                InlineKeyboardButton("👥 Staff", callback_data="staff_main")
+                InlineKeyboardButton("Locks", callback_data="locks_main"),
+                InlineKeyboardButton("Staff", callback_data="staff_main")
             ],
             [
-                InlineKeyboardButton("🌐 General", callback_data="general_main"),
-                InlineKeyboardButton("🔙 Back", callback_data="back_main")
+                InlineKeyboardButton("General", callback_data="general_main"),
+                InlineKeyboardButton("Back", callback_data="back_main")
             ]
         ])
         
         text = """Here are all my available commands, organized by category:
 
-🛡️ **Protection** - Anti-spam, anti-flood, anti-bot
-👑 **Admin** - Ban, mute, warn, kick, etc.
-🔒 **Locks** - Lock chat features
-👥 **Staff** - Manage staff members
-🌐 **General** - Info, stats, language
+Protection - Anti-spam, anti-flood, anti-bot
+Admin - Ban, mute, warn, kick, etc.
+Locks - Lock chat features
+Staff - Manage staff members
+General - Info, stats, language
 
-Click on a category above to see the commands! 👆"""
+Click on a category above to see the commands!"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -363,34 +343,34 @@ Click on a category above to see the commands! 👆"""
         """Show protection commands"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("🛡️ Anti-Spam", callback_data="cmd_antispam"),
-                InlineKeyboardButton("🌊 Anti-Flood", callback_data="cmd_antiflood")
+                InlineKeyboardButton("Anti-Spam", callback_data="cmd_antispam"),
+                InlineKeyboardButton("Anti-Flood", callback_data="cmd_antiflood")
             ],
             [
-                InlineKeyboardButton("🤖 Anti-Bot", callback_data="cmd_antibot"),
-                InlineKeyboardButton("⚔️ Anti-Raid", callback_data="cmd_antiraid")
+                InlineKeyboardButton("Anti-Bot", callback_data="cmd_antibot"),
+                InlineKeyboardButton("Anti-Raid", callback_data="cmd_antiraid")
             ],
             [
-                InlineKeyboardButton("🎭 Anti-Scam", callback_data="cmd_antiscam"),
-                InlineKeyboardButton("🔞 Anti-Porn", callback_data="cmd_antiporn")
+                InlineKeyboardButton("Anti-Scam", callback_data="cmd_antiscam"),
+                InlineKeyboardButton("Anti-Porn", callback_data="cmd_antiporn")
             ],
             [
-                InlineKeyboardButton("🔙 Back", callback_data="back_help")
+                InlineKeyboardButton("Back", callback_data="back_help")
             ]
         ])
         
-        text = """**🛡️ Protection Commands**
+        text = """Protection Commands
 
 Here are the protection features available:
 
-• **Anti-Spam** - Automatically block spam messages
-• **Anti-Flood** - Prevent message flooding
-• **Anti-Bot** - Block users with suspicious usernames
-• **Anti-Raid** - Protect against raid attacks
-• **Anti-Scam** - Detect and remove scam messages
-• **Anti-Porn** - Filter NSFW content
+- Anti-Spam - Automatically block spam messages
+- Anti-Flood - Prevent message flooding
+- Anti-Bot - Block users with suspicious usernames
+- Anti-Raid - Protect against raid attacks
+- Anti-Scam - Detect and remove scam messages
+- Anti-Porn - Filter NSFW content
 
-Click a button above to learn more! 👆"""
+Click a button above to learn more!"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -402,34 +382,34 @@ Click a button above to learn more! 👆"""
         """Show admin commands"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("🔨 Ban/Unban", callback_data="cmd_ban"),
-                InlineKeyboardButton("👢 Kick", callback_data="cmd_kick")
+                InlineKeyboardButton("Ban/Unban", callback_data="cmd_ban"),
+                InlineKeyboardButton("Kick", callback_data="cmd_kick")
             ],
             [
-                InlineKeyboardButton("🔇 Mute/Unmute", callback_data="cmd_mute"),
-                InlineKeyboardButton("⚠️ Warn", callback_data="cmd_warn")
+                InlineKeyboardButton("Mute/Unmute", callback_data="cmd_mute"),
+                InlineKeyboardButton("Warn", callback_data="cmd_warn")
             ],
             [
-                InlineKeyboardButton("📌 Pin/Unpin", callback_data="cmd_pin"),
-                InlineKeyboardButton("🗑️ Purge", callback_data="cmd_purge")
+                InlineKeyboardButton("Pin/Unpin", callback_data="cmd_pin"),
+                InlineKeyboardButton("Purge", callback_data="cmd_purge")
             ],
             [
-                InlineKeyboardButton("🔙 Back", callback_data="back_help")
+                InlineKeyboardButton("Back", callback_data="back_help")
             ]
         ])
         
-        text = """**👑 Admin Commands**
+        text = """Admin Commands
 
 Here are the admin tools available:
 
-• **Ban/Unban** - Permanently ban or unban users
-• **Kick** - Remove a user from the group
-• **Mute/Unmute** - Temporarily mute a user
-• **Warn** - Issue warnings to users
-• **Pin/Unpin** - Pin messages in chat
-• **Purge** - Delete multiple messages
+- Ban/Unban - Permanently ban or unban users
+- Kick - Remove a user from the group
+- Mute/Unmute - Temporarily mute a user
+- Warn - Issue warnings to users
+- Pin/Unpin - Pin messages in chat
+- Purge - Delete multiple messages
 
-Click a button above to learn more! 👆"""
+Click a button above to learn more!"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -441,41 +421,41 @@ Click a button above to learn more! 👆"""
         """Show locks commands"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("🔗 Links", callback_data="locktoggle_links"),
-                InlineKeyboardButton("🔄 Forwards", callback_data="locktoggle_forward")
+                InlineKeyboardButton("Links", callback_data="locktoggle_links"),
+                InlineKeyboardButton("Forwards", callback_data="locktoggle_forward")
             ],
             [
-                InlineKeyboardButton("🎵 Audio", callback_data="locktoggle_audio"),
-                InlineKeyboardButton("🎬 Video", callback_data="locktoggle_video")
+                InlineKeyboardButton("Audio", callback_data="locktoggle_audio"),
+                InlineKeyboardButton("Video", callback_data="locktoggle_video")
             ],
             [
-                InlineKeyboardButton("🖼️ Photos", callback_data="locktoggle_photo"),
-                InlineKeyboardButton("📄 Documents", callback_data="locktoggle_document")
+                InlineKeyboardButton("Photos", callback_data="locktoggle_photo"),
+                InlineKeyboardButton("Documents", callback_data="locktoggle_document")
             ],
             [
-                InlineKeyboardButton("🎭 Stickers", callback_data="locktoggle_sticker"),
-                InlineKeyboardButton("📍 Locations", callback_data="locktoggle_location")
+                InlineKeyboardButton("Stickers", callback_data="locktoggle_sticker"),
+                InlineKeyboardButton("Locations", callback_data="locktoggle_location")
             ],
             [
-                InlineKeyboardButton("🔄 Refresh", callback_data="locktypes_refresh"),
-                InlineKeyboardButton("🔙 Back", callback_data="back_help")
+                InlineKeyboardButton("Refresh", callback_data="locktypes_refresh"),
+                InlineKeyboardButton("Back", callback_data="back_help")
             ]
         ])
         
-        text = """**🔒 Lock Commands**
+        text = """Lock Commands
 
 Use the buttons below to lock/unlock content types in your group:
 
-• **Links** - Lock/Unlock sending links
-• **Forwards** - Lock/Unlock forwarded messages
-• **Audio** - Lock/Unlock audio files
-• **Video** - Lock/Unlock video files
-• **Photos** - Lock/Unlock photos
-• **Documents** - Lock/Unlock documents
-• **Stickers** - Lock/Unlock stickers
-• **Locations** - Lock/Unlock location sharing
+- Links - Lock/Unlock sending links
+- Forwards - Lock/Unlock forwarded messages
+- Audio - Lock/Unlock audio files
+- Video - Lock/Unlock video files
+- Photos - Lock/Unlock photos
+- Documents - Lock/Unlock documents
+- Stickers - Lock/Unlock stickers
+- Locations - Lock/Unlock location sharing
 
-Click any button to toggle! 🔄"""
+Click any button to toggle!"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -487,30 +467,29 @@ Click any button to toggle! 🔄"""
         """Show general commands"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("📊 Stats", callback_data="stats_main"),
-                InlineKeyboardButton("🌐 Language", callback_data="languages_main")
+                InlineKeyboardButton("Stats", callback_data="stats_main"),
+                InlineKeyboardButton("Language", callback_data="languages_main")
             ],
             [
-                InlineKeyboardButton("📋 Staff", callback_data="staff_main"),
-                InlineKeyboardButton("📜 Rules", callback_data="cmd_rules")
+                InlineKeyboardButton("Staff", callback_data="staff_main"),
+                InlineKeyboardButton("Rules", callback_data="cmd_rules")
             ],
             [
-                InlineKeyboardButton("🔙 Back", callback_data="back_help")
+                InlineKeyboardButton("Back", callback_data="back_help")
             ]
         ])
         
         text = """
-🌐 **General Commands**
+General Commands
 
 These are general commands available to all users:
 
-📊 **Stats** - View bot statistics and info
-🌐 **Language** - Change the bot language
-📋 **Staff** - View group staff members
-📜 **Rules** - View group rules
+Stats - View bot statistics and info
+Language - Change the bot language
+Staff - View group staff members
+Rules - View group rules
 
-Use the buttons above to explore! 👆
-"""
+Use the buttons above to explore!"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
@@ -522,26 +501,26 @@ Use the buttons above to explore! 👆
         """Show staff menu"""
         keyboard = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("👥 Staff List", callback_data="staff_refresh"),
-                InlineKeyboardButton("🚫 GBan List", callback_data="gban_refresh")
+                InlineKeyboardButton("Staff List", callback_data="staff_refresh"),
+                InlineKeyboardButton("GBan List", callback_data="gban_refresh")
             ],
             [
-                InlineKeyboardButton("✅ Approved List", callback_data="approved_refresh")
+                InlineKeyboardButton("Approved List", callback_data="approved_refresh")
             ],
             [
-                InlineKeyboardButton("🔙 Back", callback_data="back_main")
+                InlineKeyboardButton("Back", callback_data="back_main")
             ]
         ])
         
-        text = """**👥 Staff Menu**
+        text = """Staff Menu
 
 View and manage staff-related lists:
 
-• **Staff List** - View all group admins
-• **GBan List** - View globally banned users
-• **Approved List** - View approved users
+- Staff List - View all group admins
+- GBan List - View globally banned users
+- Approved List - View approved users
 
-Use the buttons above to explore! 👆"""
+Use the buttons above to explore!"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)
