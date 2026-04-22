@@ -164,7 +164,7 @@ class ModerationHandlers:
     def _register_callbacks(self):
         """Register callback handlers"""
         
-        @self.app.on_callback_query(filters.regex(r"^(lock|unlock)_"))
+        @self.app.on_callback_query(filters.regex(r"^(lock|unlock|locktoggle)_"))
         @handle_errors
         async def lock_callback_handler(client, callback: CallbackQuery):
             await self.handle_lock_callback(client, callback)
@@ -173,6 +173,11 @@ class ModerationHandlers:
         @handle_errors
         async def settings_callback_handler(client, callback: CallbackQuery):
             await self.handle_settings_callback(client, callback)
+        
+        @self.app.on_callback_query(filters.regex(r"^(staff|gban|approved|reports)_"))
+        @handle_errors
+        async def list_callback_handler(client, callback: CallbackQuery):
+            await self.handle_list_callback(client, callback)
     
     # Lock/Unlock handlers
     async def handle_lock(self, client: Client, message: Message):
@@ -261,28 +266,64 @@ class ModerationHandlers:
         )
     
     async def handle_locktypes(self, client: Client, message: Message):
-        """Show available lock types"""
+        """Show available lock types with inline keyboard"""
         lock_types = [
-            ("links", "Links"),
-            ("spam", "Spam"),
-            ("forward", "Forwards"),
-            ("audio", "Audio"),
-            ("video", "Videos"),
-            ("photo", "Photos"),
-            ("document", "Documents"),
-            ("sticker", "Stickers"),
-            ("location", "Locations"),
-            ("contact", "Contacts"),
-            ("game", "Games"),
-            ("inline", "Inline queries"),
+            ("links", "🔗 Links", "lock_links"),
+            ("spam", "🚫 Spam", "lock_spam"),
+            ("forward", "🔄 Forwards", "lock_forward"),
+            ("audio", "🎵 Audio", "lock_audio"),
+            ("video", "🎬 Video", "lock_video"),
+            ("photo", "🖼️ Photo", "lock_photo"),
+            ("document", "📄 Document", "lock_document"),
+            ("sticker", "🎭 Sticker", "lock_sticker"),
+            ("location", "📍 Location", "lock_location"),
+            ("contact", "📞 Contact", "lock_contact"),
+            ("game", "🎮 Game", "lock_game"),
+            ("inline", "🔍 Inline", "lock_inline"),
         ]
         
-        text = "🔐 Available lock types:\n\n"
-        for lock_key, lock_name in lock_types:
-            text += f"• `/lock {lock_key}` - Lock {lock_name}\n"
-            text += f"• `/unlock {lock_key}` - Unlock {lock_name}\n\n"
+        settings = await db.get_group_settings(message.chat.id)
         
-        await message.reply_text(text)
+        buttons = []
+        row = []
+        
+        for i, (lock_key, lock_name, setting_key) in enumerate(lock_types, 1):
+            # Check if locked
+            is_locked = getattr(settings, setting_key, False) if settings else False
+            icon = "🔒" if is_locked else "🔓"
+            btn_text = f"{icon} {lock_name.split()[1]}"
+            
+            row.append(
+                InlineKeyboardButton(
+                    btn_text,
+                    callback_data=f"locktoggle_{lock_key}"
+                )
+            )
+            
+            if i % 2 == 0:
+                buttons.append(row)
+                row = []
+        
+        if row:
+            buttons.append(row)
+        
+        buttons.append([InlineKeyboardButton("🔄 Refresh", callback_data="locktypes_refresh")])
+        buttons.append([InlineKeyboardButton("🔙 Back", callback_data="settings_main")])
+        
+        keyboard = InlineKeyboardMarkup(buttons)
+        
+        text = """
+╔═══════════════════════════════════════════╗
+║            🔐 Lock Types 🔐              ║
+╚═══════════════════════════════════════════╝
+
+**Click a button to Lock/Unlock that feature:**
+
+🔒 = Currently Locked
+🔓 = Currently Unlocked
+"""
+        
+        await message.reply_text(text, reply_markup=keyboard)
     
     # Filter handlers
     async def handle_addblk(self, client: Client, message: Message):
@@ -674,18 +715,87 @@ class ModerationHandlers:
     
     async def handle_lock_callback(self, client: Client, callback: CallbackQuery):
         """Handle lock/unlock callbacks"""
-        _, action, lock_type = callback.data.split('_')
+        parts = callback.data.split('_')
         
-        await callback.answer("Updated!", show_alert=True)
-        await callback.message.edit_reply_markup(
-            reply_markup=callback.message.reply_markup
-        )
+        if len(parts) == 3:  # locktoggle_<type>
+            _, action, lock_type = parts
+            
+            # Map lock types to settings
+            lock_mapping = {
+                'links': 'lock_links',
+                'spam': 'lock_spam',
+                'forward': 'lock_forward',
+                'audio': 'lock_audio',
+                'video': 'lock_video',
+                'photo': 'lock_photo',
+                'document': 'lock_document',
+                'sticker': 'lock_sticker',
+                'location': 'lock_location',
+                'contact': 'lock_contact',
+                'game': 'lock_game',
+                'inline': 'lock_inline',
+            }
+            
+            setting_key = lock_mapping.get(lock_type)
+            if not setting_key:
+                await callback.answer("❌ Invalid lock type!", show_alert=True)
+                return
+            
+            settings = await db.get_group_settings(callback.message.chat.id)
+            if not settings:
+                await callback.answer("❌ Settings not found!", show_alert=True)
+                return
+            
+            # Toggle the setting
+            current_value = getattr(settings, setting_key, False)
+            setattr(settings, setting_key, not current_value)
+            await db.save_group_settings(settings)
+            
+            new_state = "Locked" if not current_value else "Unlocked"
+            await callback.answer(f"✅ {lock_type.title()} {new_state}!", show_alert=True)
+            
+            # Refresh the keyboard
+            await self.handle_locktypes(client, callback.message)
+        elif len(parts) == 2:  # lock_<type> or unlock_<type>
+            action, lock_type = parts
+            
+            # Similar logic for direct lock/unlock
+            await callback.answer("Updated!", show_alert=True)
+        else:
+            await callback.answer("Coming soon!", show_alert=True)
     
     async def handle_settings_callback(self, client: Client, callback: CallbackQuery):
         """Handle settings callbacks"""
-        setting = callback.data.split('_')[1]
+        parts = callback.data.split('_')
         
-        await callback.answer("Updated!", show_alert=True)
+        if len(parts) >= 2:
+            setting = parts[1]
+            
+            settings = await db.get_group_settings(callback.message.chat.id)
+            if not settings:
+                await callback.answer("❌ Settings not found!", show_alert=True)
+                return
+            
+            # Toggle settings
+            setting_map = {
+                'antispam': 'antispam_enabled',
+                'flood': 'flood_enabled',
+                'raid': 'raid_protection_enabled',
+                'welcome': 'welcome_enabled',
+                'goodbye': 'goodbye_enabled',
+                'reports': 'reports_enabled',
+            }
+            
+            setting_key = setting_map.get(setting)
+            if setting_key:
+                current_value = getattr(settings, setting_key, False)
+                setattr(settings, setting_key, not current_value)
+                await db.save_group_settings(settings)
+                await callback.answer(f"✅ {'Enabled' if not current_value else 'Disabled'}!", show_alert=True)
+            else:
+                await callback.answer("Coming soon!", show_alert=True)
+        else:
+            await callback.answer("Coming soon!", show_alert=True)
     
     def parse_user_id(self, text: str):
         """Parse user ID from text"""
@@ -703,3 +813,146 @@ class ModerationHandlers:
             return mention_match.group(1)
         
         return None
+    
+    async def handle_list_callback(self, client: Client, callback: CallbackQuery):
+        """Handle list callbacks (staff, gban, approved, reports)"""
+        action, data = callback.data.split('_', 1)
+        
+        if action == "staff":
+            await self.show_staff_list_callback(client, callback)
+        elif action == "gban":
+            await self.show_gban_list_callback(client, callback)
+        elif action == "approved":
+            await self.show_approved_list_callback(client, callback)
+        elif action == "reports":
+            await self.show_reports_list_callback(client, callback)
+    
+    async def show_staff_list_callback(self, client: Client, callback: CallbackQuery):
+        """Show staff list via callback"""
+        staff = await db.get_staff(callback.message.chat.id)
+        
+        text = f"""
+╔═══════════════════════════════════════════╗
+║             👥 Staff List 👥               ║
+╚═══════════════════════════════════════════╝
+
+**Chat:** {callback.message.chat.title}
+"""
+        
+        if not staff:
+            text += "\n❌ No staff members!\n"
+        else:
+            text += "\n"
+            for i, member in enumerate(staff, 1):
+                try:
+                    user = await client.get_users(member['user_id'])
+                    text += f"{i}. {get_mention(user)} - {member.get('rank', 'Staff')}\n"
+                except:
+                    text += f"{i}. User {member['user_id']} - {member.get('rank', 'Staff')}\n"
+        
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🔄 Refresh", callback_data="staff_refresh")],
+            [InlineKeyboardButton("🔙 Back", callback_data="settings_main")]
+        ])
+        
+        try:
+            await callback.message.edit_text(text, reply_markup=keyboard)
+        except:
+            await callback.message.reply_text(text, reply_markup=keyboard)
+        await callback.answer()
+    
+    async def show_gban_list_callback(self, client: Client, callback: CallbackQuery):
+        """Show global ban list via callback"""
+        gbans = await db.get_global_bans()
+        
+        text = """
+╔═══════════════════════════════════════════╗
+║           🚫 Global Ban List 🚫           ║
+╚═══════════════════════════════════════════╝
+"""
+        
+        if not gbans:
+            text += "\n✅ No global bans!\n"
+        else:
+            text += f"\n**Total:** {len(gbans)} banned users\n\n"
+            for i, gban in enumerate(gbans[:20], 1):
+                try:
+                    user = await client.get_users(gban['user_id'])
+                    text += f"{i}. {get_mention(user)}\n"
+                    text += f"   Reason: {gban.get('reason', 'No reason')}\n\n"
+                except:
+                    text += f"{i}. User {gban['user_id']}\n"
+                    text += f"   Reason: {gban.get('reason', 'No reason')}\n\n"
+        
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🔄 Refresh", callback_data="gban_refresh")],
+            [InlineKeyboardButton("🔙 Back", callback_data="settings_main")]
+        ])
+        
+        try:
+            await callback.message.edit_text(text, reply_markup=keyboard)
+        except:
+            await callback.message.reply_text(text, reply_markup=keyboard)
+        await callback.answer()
+    
+    async def show_approved_list_callback(self, client: Client, callback: CallbackQuery):
+        """Show approved users list via callback"""
+        approved = await db.get_approved_users(callback.message.chat.id)
+        
+        text = f"""
+╔═══════════════════════════════════════════╗
+║          ✅ Approved Users ✅              ║
+╚═══════════════════════════════════════════╝
+
+**Chat:** {callback.message.chat.title}
+"""
+        
+        if not approved:
+            text += "\n❌ No approved users!\n"
+        else:
+            text += f"\n**Total:** {len(approved)} approved users\n\n"
+            for i, user_data in enumerate(approved[:20], 1):
+                try:
+                    user = await client.get_users(user_data['user_id'])
+                    text += f"{i}. {get_mention(user)}\n"
+                except:
+                    text += f"{i}. User {user_data['user_id']}\n"
+        
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🔄 Refresh", callback_data="approved_refresh")],
+            [InlineKeyboardButton("🔙 Back", callback_data="settings_main")]
+        ])
+        
+        try:
+            await callback.message.edit_text(text, reply_markup=keyboard)
+        except:
+            await callback.message.reply_text(text, reply_markup=keyboard)
+        await callback.answer()
+    
+    async def show_reports_list_callback(self, client: Client, callback: CallbackQuery):
+        """Show reports list via callback"""
+        # This would typically show pending reports
+        text = f"""
+╔═══════════════════════════════════════════╗
+║            📝 Reports Center 📝            ║
+╚═══════════════════════════════════════════╝
+
+**Chat:** {callback.message.chat.title}
+
+📋 **Report Commands:**
+• `/report` - Report a user/message to admins
+• `/reports` - View reports (admin only)
+
+⚙️ **Settings:**
+Reports are currently enabled in this chat.
+"""
+        
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🔙 Back", callback_data="settings_main")]
+        ])
+        
+        try:
+            await callback.message.edit_text(text, reply_markup=keyboard)
+        except:
+            await callback.message.reply_text(text, reply_markup=keyboard)
+        await callback.answer()
