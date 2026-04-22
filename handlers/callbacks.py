@@ -59,6 +59,12 @@ class CallbackHandlers:
             """Back to help menu"""
             await self.show_help_menu(callback)
         
+        @self.app.on_callback_query(filters.regex(r"^support_info$"))
+        @handle_errors
+        async def cb_support_info(client, callback: CallbackQuery):
+            """Show support information"""
+            await self.show_support_info(callback)
+        
         @self.app.on_callback_query(filters.regex(r"^protection_main$"))
         @handle_errors
         async def cb_protection_main(client, callback: CallbackQuery):
@@ -246,27 +252,19 @@ class CallbackHandlers:
     # ==================== MENU FUNCTIONS ====================
     
     async def show_main_menu(self, callback: CallbackQuery):
-        """Show main menu"""
+        """Show main menu for regular users"""
         keyboard = InlineKeyboardMarkup([
             [
                 InlineKeyboardButton("📖 Commands", callback_data="help_main"),
                 InlineKeyboardButton("🛡️ Protection", callback_data="protection_main")
             ],
             [
-                InlineKeyboardButton("⚙️ Settings", callback_data="settings_main"),
-                InlineKeyboardButton("👥 Staff", callback_data="staff_main")
-            ],
-            [
-                InlineKeyboardButton("🔒 Locks", callback_data="locks_main"),
-                InlineKeyboardButton("👑 Admin", callback_data="admin_main")
-            ],
-            [
                 InlineKeyboardButton("🌐 Language", callback_data="languages_main"),
-                InlineKeyboardButton("📊 Stats", callback_data="stats_main")
+                InlineKeyboardButton("📜 Rules", callback_data="cmd_rules")
             ],
             [
                 InlineKeyboardButton("📢 Channel", url=config.bot.channel_link),
-                InlineKeyboardButton("💬 Support", url=config.bot.support_link)
+                InlineKeyboardButton("💬 Support", callback_data="support_info")
             ]
         ])
         
@@ -281,7 +279,46 @@ I can help protect your groups from:
 • Content locks
 • And much more!
 
+**For Admins:**
+Use /help to see admin commands or add me to your group to access settings.
+
 Use the buttons below to explore:"""
+        
+        try:
+            await callback.message.edit_text(text, reply_markup=keyboard)
+        except:
+            await callback.message.reply_text(text, reply_markup=keyboard)
+        await callback.answer()
+    
+    async def show_support_info(self, callback: CallbackQuery):
+        """Show support information"""
+        keyboard = InlineKeyboardMarkup([
+            [
+                InlineKeyboardButton("💬 Join Support", url=config.bot.support_link),
+                InlineKeyboardButton("📢 Channel", url=config.bot.channel_link)
+            ],
+            [
+                InlineKeyboardButton("➕ Add to Group", url=f"https://t.me/{config.bot.username}?startgroup=true")
+            ],
+            [
+                InlineKeyboardButton("🔙 Back", callback_data="back_main")
+            ]
+        ])
+        
+        text = f"""💬 **Support Information**
+
+Need help? Here's how to reach us:
+
+👥 **Support Group:** {config.bot.support_link}
+📢 **Channel:** {config.bot.channel_link}
+🤖 **Bot:** @{config.bot.username}
+
+**How to use me:**
+1. Add me to your group
+2. Make me an admin
+3. Use /help to see all commands
+
+For admin features, use the inline menu after adding me to your group!"""
         
         try:
             await callback.message.edit_text(text, reply_markup=keyboard)

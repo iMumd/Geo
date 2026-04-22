@@ -105,55 +105,88 @@ class UserHandlers:
             await self.handle_settings(client, message)
     
     def _register_callbacks(self):
-        """Register callback handlers - delegated to global CallbackHandlers"""
-        # All callbacks are now handled by handlers/callbacks.py
-        # This method is kept for potential future specific user callbacks
-        pass
+        """Register callback handlers"""
+        @self.app.on_callback_query(filters.regex(r"^support_info$"))
+        @handle_errors
+        async def cb_support_info(client, callback: CallbackQuery):
+            """Show support information"""
+            await self.show_support_info(callback)
+        
+        # All other callbacks are handled by handlers/callbacks.py
     
     async def show_main_menu(self, callback: CallbackQuery):
-        """Show main menu"""
+        """Show main menu for regular users"""
         keyboard = InlineKeyboardMarkup([
             [
                 InlineKeyboardButton("📖 Commands", callback_data="help_main"),
                 InlineKeyboardButton("🛡️ Protection", callback_data="protection_main")
             ],
             [
-                InlineKeyboardButton("⚙️ Settings", callback_data="settings_main"),
-                InlineKeyboardButton("👥 Staff", callback_data="staff_main")
-            ],
-            [
                 InlineKeyboardButton("🌐 Language", callback_data="languages_main"),
-                InlineKeyboardButton("📊 Stats", callback_data="stats_main")
+                InlineKeyboardButton("📜 Rules", callback_data="cmd_rules")
             ],
             [
-                InlineKeyboardButton("📢 Channel", url="https://t.me/iMumd"),
-                InlineKeyboardButton("💬 Support", url="https://t.me/iMumd")
+                InlineKeyboardButton("📢 Channel", url=config.bot.channel_link),
+                InlineKeyboardButton("💬 Support", callback_data="support_info")
             ]
         ])
         
-        welcome_text = f"""
-╔═══════════════════════════════════════════╗
-║                                           ║
-║   Welcome to **{config.bot.name}** {config.bot.god_status} Edition!    ║
-║                                           ║
-║   Your powerful Telegram protection bot   ║
-║                                           ║
-╚═══════════════════════════════════════════╝
+        welcome_text = f"""Hi, I'm **{config.bot.name}** {config.bot.god_status} Edition 👋
 
-🛡️ **I can help protect your groups from:**
+I'm your powerful Telegram protection bot 🛡️
+
+I can help protect your groups from:
 • Spam and malicious content
 • Unwanted users
 • Warning system
 • Content locks
 • And much more!
 
-👇 **Select an option below:**
-"""
+**For Admins:**
+Use /help to see admin commands or add me to your group to access settings.
+
+Use the buttons below to explore:"""
         
         try:
             await callback.message.edit_text(welcome_text, reply_markup=keyboard)
         except:
             await callback.message.reply_text(welcome_text, reply_markup=keyboard)
+        await callback.answer()
+    
+    async def show_support_info(self, callback: CallbackQuery):
+        """Show support information"""
+        keyboard = InlineKeyboardMarkup([
+            [
+                InlineKeyboardButton("💬 Join Support", url=config.bot.support_link),
+                InlineKeyboardButton("📢 Channel", url=config.bot.channel_link)
+            ],
+            [
+                InlineKeyboardButton("➕ Add to Group", url=f"https://t.me/{config.bot.username}?startgroup=true")
+            ],
+            [
+                InlineKeyboardButton("🔙 Back", callback_data="back_main")
+            ]
+        ])
+        
+        text = f"""💬 **Support Information**
+
+Need help? Here's how to reach us:
+
+👥 **Support Group:** {config.bot.support_link}
+📢 **Channel:** {config.bot.channel_link}
+🤖 **Bot:** @{config.bot.username}
+
+**How to use me:**
+1. Add me to your group
+2. Make me an admin
+3. Use /help to see all commands
+
+For admin features, use the inline menu after adding me to your group!"""
+        
+        try:
+            await callback.message.edit_text(text, reply_markup=keyboard)
+        except:
+            await callback.message.reply_text(text, reply_markup=keyboard)
         await callback.answer()
     
     async def show_help_menu(self, callback: CallbackQuery):
@@ -261,16 +294,12 @@ Click a command to get info:"""
                     InlineKeyboardButton("🛡️ Protection", callback_data="protection_main")
                 ],
                 [
-                    InlineKeyboardButton("⚙️ Settings", callback_data="settings_main"),
-                    InlineKeyboardButton("👥 Staff", callback_data="staff_main")
-                ],
-                [
                     InlineKeyboardButton("🌐 Language", callback_data="languages_main"),
-                    InlineKeyboardButton("📊 Stats", callback_data="stats_main")
+                    InlineKeyboardButton("📜 Rules", callback_data="cmd_rules")
                 ],
                 [
                     InlineKeyboardButton("📢 Channel", url=config.bot.channel_link),
-                    InlineKeyboardButton("💬 Support", url=config.bot.support_link)
+                    InlineKeyboardButton("💬 Support", callback_data="support_info")
                 ]
             ])
             
@@ -284,6 +313,9 @@ I can help protect your groups from:
 • Warning system
 • Content locks
 • And much more!
+
+**For Admins:**
+Use /help to see admin commands or add me to your group to access settings.
 
 Use the buttons below to explore:"""
             
