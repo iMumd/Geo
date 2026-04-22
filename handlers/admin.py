@@ -3,7 +3,7 @@
 # ═══════════════════════════════════════════════════════════════
 
 from pyrogram import Client, filters
-from pyrogram.types import Message, ChatPermissions, InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import Message, ChatPermissions, InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 from pyrogram.enums import ChatType
 from datetime import datetime, timedelta
 import logging
@@ -26,6 +26,7 @@ class AdminHandlers:
     def __init__(self, app: Client):
         self.app = app
         self._register_handlers()
+        self._register_callbacks()
     
     def _register_handlers(self):
         """Register command handlers"""
@@ -148,6 +149,67 @@ class AdminHandlers:
         @handle_errors
         async def set_warn_limit_handler(client, message: Message):
             await self.handle_set_warn_limit(client, message)
+    
+    def _register_callbacks(self):
+        """Register callback handlers"""
+        
+        @self.app.on_callback_query(filters.regex(r"^(resetwarns|unban)_"))
+        @handle_errors
+        async def admin_callback_handler(client, callback: CallbackQuery):
+            await self.handle_admin_callback(client, callback)
+        
+        @self.app.on_callback_query(filters.regex(r"^close_message$"))
+        @handle_errors
+        async def close_callback_handler(client, callback: CallbackQuery):
+            try:
+                await callback.message.delete()
+            except:
+                await callback.message.edit_text("Message closed.")
+            await callback.answer()
+    
+    async def handle_admin_callback(self, client: Client, callback: CallbackQuery):
+        """Handle admin-related callbacks"""
+        parts = callback.data.split('_')
+        
+        if len(parts) == 2:
+            action, user_id = parts
+            user_id = int(user_id)
+            
+            if action == "resetwarns":
+                # Reset all warnings for user
+                try:
+                    await db.clear_warnings(user_id, callback.message.chat.id)
+                    await callback.answer("✅ All warnings reset!", show_alert=True)
+                    
+                    keyboard = InlineKeyboardMarkup([
+                        [InlineKeyboardButton("✅ Done", callback_data="close_message")]
+                    ])
+                    
+                    try:
+                        await callback.message.edit_reply_markup(reply_markup=keyboard)
+                    except:
+                        pass
+                except Exception as e:
+                    await callback.answer(f"❌ Error: {str(e)}", show_alert=True)
+            
+            elif action == "unban":
+                # Unban user
+                try:
+                    await client.unban_chat_member(callback.message.chat.id, user_id)
+                    await callback.answer("✅ User unbanned!", show_alert=True)
+                    
+                    keyboard = InlineKeyboardMarkup([
+                        [InlineKeyboardButton("✅ Done", callback_data="close_message")]
+                    ])
+                    
+                    try:
+                        await callback.message.edit_reply_markup(reply_markup=keyboard)
+                    except:
+                        pass
+                except Exception as e:
+                    await callback.answer(f"❌ Error: {str(e)}", show_alert=True)
+        else:
+            await callback.answer("Coming soon!", show_alert=True)
     
     async def handle_ban(self, client: Client, message: Message):
         """Ban a user"""
@@ -454,20 +516,33 @@ class AdminHandlers:
         settings = await db.get_group_settings(message.chat.id)
         warn_limit = settings.warns_limit if settings else config.defaults.default_warns
         
-        text = f"⚠️ Warnings for {get_mention(user)}:\n\n"
+        text = f"""
+╔═══════════════════════════════════════════╗
+║           ⚠️ User Warnings ⚠️              ║
+╚═══════════════════════════════════════════╝
+
+👤 **User:** {get_mention(user)}
+📊 **Total:** {len(warnings)}/{warn_limit} warnings
+"""
         
         if not warnings:
-            text += "✅ No warnings!"
+            text += "\n✅ This user has no warnings!"
         else:
+            text += "\n**Warning List:**\n"
             for i, warn in enumerate(warnings, 1):
                 from utils.helpers import time_ago
-                text += f"{i}. {warn['reason']} - {time_ago(int(datetime.now().timestamp() - (datetime.now() - warn['warned_at']).total_seconds()))}\n"
-        
-        text += f"\n📊 Total: {len(warnings)}/{warn_limit}"
+                warn_time = time_ago(int(datetime.now().timestamp() - (datetime.now() - warn['warned_at']).total_seconds()))
+                text += f"\n{i}. 📝 {warn['reason']}\n"
+                text += f"   ⏰ {warn_time} ago\n"
         
         keyboard = InlineKeyboardMarkup([
-            [InlineKeyboardButton("❌ Reset All", callback_data=f"resetwarns_{user.id}")]
-        ]) if warnings else None
+            [
+                InlineKeyboardButton("🗑️ Reset Warnings", callback_data=f"resetwarns_{user.id}"),
+                InlineKeyboardButton("❌ Close", callback_data="close_message")
+            ]
+        ]) if warnings else InlineKeyboardMarkup([
+            [InlineKeyboardButton("❌ Close", callback_data="close_message")]
+        ])
         
         await message.reply_text(text, reply_markup=keyboard)
     
